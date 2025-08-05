@@ -8,8 +8,10 @@ type Todo struct {
 }
 
 func main() {
-	todo := Todo{name: "take the puppy for a lap", user: "eddie"}
 	fmt.Printf("Todo: %v\n", todo.name)
 	//mockup list of todos
 	todos := []Todo{}
+	todos = append(todos, Todo{name: "take the puppy for a lap", user: "eddie"})
+	todos = append(todos, Todo{name: "do the shopping", user: "eddie"})
+
 }
