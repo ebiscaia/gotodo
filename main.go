@@ -11,7 +11,7 @@ func main() {
 	//mockup list of todos
 	todos := []Todo{}
 	todos = append(todos, Todo{name: "take the puppy for a lap", user: "eddie"})
-	todos = append(todos, Todo{name: "do the shopping", user: "eddie"})
+	todos = append(todos, Todo{name: "take the rubbish out", user: "eddie"})
 
 	//loop through the todo list
 	for _, todo := range todos {
