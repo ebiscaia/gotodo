@@ -26,4 +26,11 @@ func main() {
 	for _, todo := range todos {
 		fmt.Printf("Todo: %v\n", todo.name)
 	}
+
+	//loop through the user list
+	fmt.Println()
+	for _, user := range users {
+		fmt.Printf("Todo: %v\n", user.name)
+	}
+
 }
