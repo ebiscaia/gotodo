@@ -12,6 +12,15 @@ type User struct {
 	pass string
 }
 
+func checkUser(user string, userSlice []User) bool {
+	for _, username := range userSlice {
+		if user == username.name {
+			return true
+		}
+	}
+	return false
+}
+
 func main() {
 	//mockup list of todos
 	todos := []Todo{}
