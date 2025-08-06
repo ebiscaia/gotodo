@@ -7,6 +7,11 @@ type Todo struct {
 	user string
 }
 
+type User struct {
+	name string
+	pass string
+}
+
 func main() {
 	//mockup list of todos
 	todos := []Todo{}
