@@ -12,13 +12,17 @@ type User struct {
 	pass string
 }
 
-func checkUser(user string, userSlice []User) bool {
-	for _, username := range userSlice {
-		if user == username.name {
-			return true
+func checkUserPass(usr User, userSlice []User) (bool, bool) {
+	for _, user := range userSlice {
+		if usr.name == user.name {
+			if usr.pass == user.pass {
+				return true, true
+			} else {
+				return true, false
+			}
 		}
 	}
-	return false
+	return false, false
 }
 
 func main() {
@@ -43,11 +47,21 @@ func main() {
 	}
 	fmt.Println()
 
-	for _, userToCheck := range []string{"user2", "user20"} {
-		if checkUser(userToCheck, users) {
-			fmt.Printf("User %v exists\n", userToCheck)
+	//Loop through possible users to check its validity
+	usersToCheck := []User{}
+	usersToCheck = append(usersToCheck, User{name: "user1", pass: "pass0"})
+	usersToCheck = append(usersToCheck, User{name: "user2", pass: "pass2"})
+	usersToCheck = append(usersToCheck, User{name: "user20", pass: "pass20"})
+	for _, userToCheck := range usersToCheck {
+		validUser, validPass := checkUserPass(userToCheck, users)
+		if validUser {
+			if validPass {
+				fmt.Printf("User %v exists and valid password\n", userToCheck.name)
+			} else {
+				fmt.Printf("User %v exists and invalid password\n", userToCheck.name)
+			}
 		} else {
-			fmt.Printf("User %v does not exist\n", userToCheck)
+			fmt.Printf("User %v does not exist\n", userToCheck.name)
 		}
 	}
 
