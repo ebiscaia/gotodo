@@ -41,5 +41,7 @@ func main() {
 	for _, user := range users {
 		fmt.Printf("Todo: %v\n", user.name)
 	}
+	fmt.Println()
+
 
 }
