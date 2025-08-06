@@ -43,5 +43,12 @@ func main() {
 	}
 	fmt.Println()
 
+	for _, userToCheck := range []string{"user2", "user20"} {
+		if checkUser(userToCheck, users) {
+			fmt.Printf("User %v exists\n", userToCheck)
+		} else {
+			fmt.Printf("User %v does not exist\n", userToCheck)
+		}
+	}
 
 }
