@@ -47,19 +47,6 @@ func main() {
 	}
 	fmt.Println()
 
-	//Loop through possible users to check its validity
-	usersToCheck := []User{}
-	usersToCheck = append(usersToCheck, User{name: "user1", pass: "pass0"})
-	usersToCheck = append(usersToCheck, User{name: "user2", pass: "pass2"})
-	usersToCheck = append(usersToCheck, User{name: "user20", pass: "pass20"})
-	for _, userToCheck := range usersToCheck {
-		validUser, validPass := checkUserPass(userToCheck, users)
-		if validUser {
-			if validPass {
-				fmt.Printf("User %v exists and valid password\n", userToCheck.name)
-			} else {
-				fmt.Printf("User %v exists and invalid password\n", userToCheck.name)
-			}
 		} else {
 			fmt.Printf("User %v does not exist\n", userToCheck.name)
 		}
