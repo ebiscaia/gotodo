@@ -60,6 +60,13 @@ func main() {
 		fmt.Printf("User %v does not exist. Create one before logging in.\n", userToLogin.name)
 	}
 
+	//Simulate creating a user
+	userToCreate := User{name: "user20", pass: "pass2"}
+	validUser, _ = checkUserPass(userToCreate, users)
+	if validUser {
+		fmt.Printf("User %v already exists. Try a different user name.\n", userToCreate.name)
+	} else {
+		fmt.Printf("No user associated with %v. Creating new user\n", userToCreate.name)
 	}
 
 }
