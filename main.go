@@ -56,23 +56,10 @@ func main() {
 	}
 	fmt.Println()
 
-	//Simulate a login using inputs
-	userToLogin := inputUserPass()
-	validUser, validPass := checkUserPass(userToLogin, users)
-	if validUser {
-		if validPass {
-			fmt.Printf("Login successful for %v\n", userToLogin.name)
-		} else {
-			fmt.Printf("Wrong password. User %v needs to try again.\n", userToLogin.name)
-		}
-	} else {
-		fmt.Printf("User %v does not exist. Create one before logging in.\n", userToLogin.name)
-	}
-
 	//Simulate creating a user
 	userToCreate := inputUserPass()
 	confPass := ""
-	validUser, _ = checkUserPass(userToCreate, users)
+	validUser, _ := checkUserPass(userToCreate, users)
 	if validUser {
 		fmt.Printf("User %v already exists. Try a different user name.\n", userToCreate.name)
 	} else {
@@ -85,4 +72,16 @@ func main() {
 		}
 	}
 
+	//Simulate a login using inputs
+	userToLogin := inputUserPass()
+	validUser, validPass := checkUserPass(userToLogin, users)
+	if validUser {
+		if validPass {
+			fmt.Printf("Login successful for %v\n", userToLogin.name)
+		} else {
+			fmt.Printf("Wrong password. User %v needs to try again.\n", userToLogin.name)
+		}
+	} else {
+		fmt.Printf("User %v does not exist. Create one before logging in.\n", userToLogin.name)
+	}
 }
