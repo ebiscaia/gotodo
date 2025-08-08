@@ -12,6 +12,15 @@ type User struct {
 	pass string
 }
 
+func inputUserPass() User {
+	user := User{}
+	fmt.Print("Enter username: ")
+	fmt.Scanf("%s", &user.name)
+	fmt.Print("Enter password: ")
+	fmt.Scanf("%s", &user.pass)
+	return user
+}
+
 func checkUserPass(usr User, userSlice []User) (bool, bool) {
 	for _, user := range userSlice {
 		if usr.name == user.name {
@@ -48,38 +57,29 @@ func main() {
 	fmt.Println()
 
 	//Simulate a login using inputs
-	// user := User{}
-	// fmt.Print("Enter username: ")
-	// fmt.Scanf("%s", &user.name)
-	// fmt.Print("Enter password: ")
-	// fmt.Scanf("%s", &user.pass)
-
-	// validUser, validPass := checkUserPass(user, users)
-	// if validUser {
-	// 	if validPass {
-	// 		fmt.Printf("Login successful for %v\n", user.name)
-	// 	} else {
-	// 		fmt.Printf("Wrong password. User %v needs to try again.\n", user.name)
-	// 	}
-	// } else {
-	// 	fmt.Printf("User %v does not exist. Create one before logging in.\n", user.name)
-	// }
+	userToLogin := inputUserPass()
+	validUser, validPass := checkUserPass(userToLogin, users)
+	if validUser {
+		if validPass {
+			fmt.Printf("Login successful for %v\n", userToLogin.name)
+		} else {
+			fmt.Printf("Wrong password. User %v needs to try again.\n", userToLogin.name)
+		}
+	} else {
+		fmt.Printf("User %v does not exist. Create one before logging in.\n", userToLogin.name)
+	}
 
 	//Simulate creating a user
-	userToCreate := User{}
+	userToCreate := inputUserPass()
 	confPass := ""
-	fmt.Print("Enter username: ")
-	fmt.Scanf("%s", &userToCreate.name)
-	fmt.Print("Enter password: ")
-	fmt.Scanf("%s", &userToCreate.pass)
-	validUser, _ := checkUserPass(userToCreate, users)
+	validUser, _ = checkUserPass(userToCreate, users)
 	if validUser {
 		fmt.Printf("User %v already exists. Try a different user name.\n", userToCreate.name)
 	} else {
 		fmt.Print("\nConfirm password: ")
 		fmt.Scanf("%s", &confPass)
 		if userToCreate.pass == confPass {
-			fmt.Printf("No user associated with %v. Creating new user\n", userToCreate.name)
+			fmt.Printf("Success. Creating user %v\n", userToCreate.name)
 		} else {
 			fmt.Println("Passwords do not match. Try again")
 		}
