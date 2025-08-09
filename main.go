@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"slices"
+)
 
 type Todo struct {
 	name string
@@ -10,6 +13,12 @@ type Todo struct {
 type User struct {
 	name string
 	pass string
+}
+
+type Menu struct {
+	message     string
+	instruction string
+	index       int
 }
 
 func inputUserPass(msg string) User {
@@ -87,6 +96,54 @@ func main() {
 	//mockup list of todos
 	users := []User{}
 	users = append(users, User{name: "user1", pass: "pass1"}, User{name: "user2", pass: "pass2"})
+
+	//menu items
+	menu := []Menu{}
+	menu = append(menu, Menu{message: "Create user", instruction: "create"})
+	menu = append(menu, Menu{message: "Login", instruction: "login"})
+	menu = append(menu, Menu{message: "Exit", instruction: "exit"})
+	menuChosen := Menu{}
+
+	//loop through menu but avoid login if there are no users
+	if len(users) == 0 {
+		menu = slices.Delete(menu, 1, 2)
+	}
+
+	for {
+		fmt.Println("Choose one of the following options: ")
+		fmt.Println()
+		for pos := range menu {
+			menu[pos].index = pos + 1
+			if menu[pos].instruction == "exit" {
+				menu[pos].index = 0
+			}
+			fmt.Printf("%v - %v\n", menu[pos].index, menu[pos].message)
+		}
+
+		//Enter chosen menu option
+		fmt.Print("Enter option: ")
+		_, err := fmt.Scan(&menuChosen.index)
+		if err != nil {
+			fmt.Println("Error while inputing data.")
+			panic(1)
+		}
+
+		if menuChosen.index < len(menu) {
+			break
+		} else {
+			fmt.Println("Wrong option chosen. Try again")
+		}
+	}
+
+	//Get the right option based on the index
+	for _, menuItem := range menu {
+		if menuItem.index == menuChosen.index {
+			menuChosen = menuItem
+		}
+	}
+
+	//For now just print the result
+	fmt.Printf("\nChosen option: %v", menuChosen.instruction)
 
 	//loop through the user list
 	for _, user := range users {
