@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"slices"
@@ -163,6 +164,39 @@ func todoMenu() Menu {
 	return menuChosen
 }
 
+func handleMainMenu(menuOption Menu, users []User, userToLogin User) (User, error) {
+	switch menuOption.instruction {
+	case "create":
+		successCreate, userToCreate := createUser(users)
+		if successCreate {
+			users = append(users, userToCreate)
+			userToLogin = userToCreate
+		}
+
+		successLogin, userToLogin := loginUser(userToLogin, users)
+		if successLogin {
+			fmt.Printf("User %v is logged in\n", userToLogin.name)
+		}
+		return userToLogin, nil
+
+	case "login":
+		successLogin, userToLogin := loginUser(userToLogin, users)
+		if successLogin {
+			fmt.Printf("User %v is logged in\n", userToLogin.name)
+		}
+		return userToLogin, nil
+
+	case "exit":
+		fmt.Println("Exiting... ")
+		os.Exit(0)
+
+	default:
+		fmt.Println("There is an issue with the application. Leaving...")
+		os.Exit(1)
+	}
+	return User{}, errors.New("Menu Error")
+}
+
 func main() {
 	// Empty userToLogin
 	userToLogin := User{}
@@ -180,31 +214,10 @@ func main() {
 	menuOption := startMenu(users)
 
 	//go to login, create user or exit depending on chosen option
-	switch menuOption.instruction {
-	case "create":
-		successCreate, userToCreate := createUser(users)
-		if successCreate {
-			users = append(users, userToCreate)
-			userToLogin = userToCreate
-		}
-
-		successLogin, userToLogin := loginUser(userToLogin, users)
-		if successLogin {
-			fmt.Printf("User %v is logged in\n", userToLogin.name)
-		}
-
-	case "login":
-		successLogin, userToLogin := loginUser(userToLogin, users)
-		if successLogin {
-			fmt.Printf("User %v is logged in\n", userToLogin.name)
-		}
-
-	case "exit":
-		fmt.Println("Exiting... ")
-		os.Exit(0)
-
-	default:
-		fmt.Println("There is an issue with the application. Leaving...")
+	userToLogin, err := handleMainMenu(menuOption, users, userToLogin)
+	if err != nil {
+		fmt.Printf("%v\n", err)
+		os.Exit(1)
 	}
 
 	// present menu with options
