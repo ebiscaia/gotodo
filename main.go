@@ -196,7 +196,7 @@ func main() {
 	case "login":
 		successLogin, userToLogin := loginUser(userToLogin, users)
 		if successLogin {
-			fmt.Printf("User %v is logged in", userToLogin.name)
+			fmt.Printf("User %v is logged in\n", userToLogin.name)
 		}
 
 	case "exit":
