@@ -53,7 +53,7 @@ func createUser(users []User) (bool, User) {
 		if validUser {
 			fmt.Printf("User %v already exists. Try a different user name.\n", userToCreate.name)
 		} else {
-			fmt.Print("\nConfirm password: ")
+			fmt.Print("Confirm password: ")
 			fmt.Scanf("%s", &confPass)
 			if userToCreate.pass == confPass {
 				fmt.Printf("Success. Creating user %v\n", userToCreate.name)
