@@ -115,33 +115,38 @@ func validateMenu(err error, menuChosen Menu, menu []Menu) bool {
 	return false
 }
 
-func startMenu(users []User) Menu {
-	menu := []Menu{}
-	menu = append(menu, Menu{message: "Create user", instruction: "create"})
-	menu = append(menu, Menu{message: "Login", instruction: "login"})
-	menu = append(menu, Menu{message: "Exit", instruction: "exit"})
+func inputMenu(menuItems []Menu) Menu {
 	menuChosen := Menu{}
-
-	if len(users) == 0 {
-		menu = slices.Delete(menu, 1, 2)
-	}
-
 	for {
-		promptMenu(menu)
+		promptMenu(menuItems)
 		//Enter chosen menu option
 		fmt.Print("Enter option: ")
 		_, err := fmt.Scan(&menuChosen.index)
-		if validateMenu(err, menuChosen, menu) {
+		if validateMenu(err, menuChosen, menuItems) {
 			break
 		}
 	}
 
 	//Get the right option based on the index
-	for _, menuItem := range menu {
+	for _, menuItem := range menuItems {
 		if menuItem.index == menuChosen.index {
 			menuChosen = menuItem
 		}
 	}
+	return menuChosen
+}
+
+func startMenu(users []User) Menu {
+	menuStart := []Menu{}
+	menuStart = append(menuStart, Menu{message: "Create user", instruction: "create"})
+	menuStart = append(menuStart, Menu{message: "Login", instruction: "login"})
+	menuStart = append(menuStart, Menu{message: "Exit", instruction: "exit"})
+
+	if len(users) == 0 {
+		menuStart = slices.Delete(menuStart, 1, 2)
+	}
+
+	menuChosen := inputMenu(menuStart)
 	return menuChosen
 }
 
@@ -154,24 +159,7 @@ func todoMenu() Menu {
 	menuTodo = append(menuTodo, Menu{instruction: "list", message: "List todos"})
 	menuTodo = append(menuTodo, Menu{instruction: "previous", message: "Previous menu"})
 	menuTodo = append(menuTodo, Menu{instruction: "exit", message: "Exit program"})
-	menuChosen := Menu{}
-
-	for {
-		promptMenu(menuTodo)
-		//Enter chosen menu option
-		fmt.Print("Enter option: ")
-		_, err := fmt.Scan(&menuChosen.index)
-		if validateMenu(err, menuChosen, menuTodo) {
-			break
-		}
-	}
-
-	//Get the right option based on the index
-	for _, menuItem := range menuTodo {
-		if menuItem.index == menuChosen.index {
-			menuChosen = menuItem
-		}
-	}
+	menuChosen := inputMenu(menuTodo)
 	return menuChosen
 }
 
