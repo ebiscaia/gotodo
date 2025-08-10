@@ -170,6 +170,11 @@ func main() {
 			userToLogin = userToCreate
 		}
 
+		successLogin, userToLogin := loginUser(userToLogin, users)
+		if successLogin {
+			fmt.Printf("User %v is logged in\n", userToLogin.name)
+		}
+
 	case "login":
 		successLogin, userToLogin := loginUser(userToLogin, users)
 		if successLogin {
