@@ -145,6 +145,36 @@ func startMenu(users []User) Menu {
 	return menuChosen
 }
 
+func todoMenu() Menu {
+	//create a menu with todo operations
+	menuTodo := []Menu{}
+	menuTodo = append(menuTodo, Menu{instruction: "create", message: "Create todo"})
+	menuTodo = append(menuTodo, Menu{instruction: "delete", message: "Delete todo"})
+	menuTodo = append(menuTodo, Menu{instruction: "change", message: "Change todo"})
+	menuTodo = append(menuTodo, Menu{instruction: "list", message: "List todos"})
+	menuTodo = append(menuTodo, Menu{instruction: "previous", message: "Previous menu"})
+	menuTodo = append(menuTodo, Menu{instruction: "exit", message: "Exit program"})
+	menuChosen := Menu{}
+
+	for {
+		promptMenu(menuTodo)
+		//Enter chosen menu option
+		fmt.Print("Enter option: ")
+		_, err := fmt.Scan(&menuChosen.index)
+		if validateMenu(err, menuChosen, menuTodo) {
+			break
+		}
+	}
+
+	//Get the right option based on the index
+	for _, menuItem := range menuTodo {
+		if menuItem.index == menuChosen.index {
+			menuChosen = menuItem
+		}
+	}
+	return menuChosen
+}
+
 func main() {
 	// Empty userToLogin
 	userToLogin := User{}
@@ -188,6 +218,10 @@ func main() {
 	default:
 		fmt.Println("There is an issue with the application. Leaving...")
 	}
+
+	// present menu with options
+	menuTodoOption := todoMenu()
+	fmt.Printf("Chosen option: %v\n", menuTodoOption.instruction)
 
 	//loop through the todo list
 	for _, todo := range todos {
