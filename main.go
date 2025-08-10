@@ -220,7 +220,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	// present menu with options
+	// present menu with todo options
 	menuTodoOption := todoMenu()
 	fmt.Printf("Chosen option: %v\n", menuTodoOption.instruction)
 
