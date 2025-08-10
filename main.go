@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"slices"
 )
 
@@ -145,6 +146,9 @@ func startMenu(users []User) Menu {
 }
 
 func main() {
+	// Empty userToLogin
+	userToLogin := User{}
+
 	//mockup list of todos
 	todos := []Todo{}
 	todos = append(todos, Todo{name: "take the puppy for a lap", user: "eddie"})
@@ -157,34 +161,34 @@ func main() {
 	//menu items
 	menuOption := startMenu(users)
 
-	//loop through menu but avoid login if there are no users
+	//go to login, create user or exit depending on chosen option
+	switch menuOption.instruction {
+	case "create":
+		successCreate, userToCreate := createUser(users)
+		if successCreate {
+			users = append(users, userToCreate)
+			userToLogin = userToCreate
+		}
 
-	//For now just print the result
-	fmt.Printf("\nChosen option: %v", menuOption.instruction)
+	case "login":
+		successLogin, userToLogin := loginUser(userToLogin, users)
+		if successLogin {
+			fmt.Printf("User %v is logged in", userToLogin.name)
+		}
+
+	case "exit":
+		fmt.Println("Exiting... ")
+		os.Exit(0)
+
+	default:
+		fmt.Println("There is an issue with the application. Leaving...")
+	}
 
 	//loop through the user list
 	for _, user := range users {
 		fmt.Printf("User: %v\n", user.name)
 	}
 	fmt.Println()
-
-	// Empty userToLogin
-	userToLogin := User{}
-
-	//Simulate creating a user
-	successCreate, userToCreate := createUser(users)
-	if successCreate {
-		users = append(users, userToCreate)
-		userToLogin = userToCreate
-	}
-
-	fmt.Printf("%v\n", users)
-
-	//Simulate a login using inputs
-	successLogin, userToLogin := loginUser(userToLogin, users)
-	if successLogin {
-		fmt.Printf("User %v is logged in", userToLogin.name)
-	}
 
 	//loop through the todo list
 	for _, todo := range todos {
