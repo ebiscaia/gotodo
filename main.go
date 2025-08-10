@@ -189,12 +189,6 @@ func main() {
 		fmt.Println("There is an issue with the application. Leaving...")
 	}
 
-	//loop through the user list
-	for _, user := range users {
-		fmt.Printf("User: %v\n", user.name)
-	}
-	fmt.Println()
-
 	//loop through the todo list
 	for _, todo := range todos {
 		fmt.Printf("Todo: %v\n", todo.name)
