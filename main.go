@@ -23,7 +23,7 @@ type Menu struct {
 
 func inputUserPass(msg string) User {
 	user := User{}
-	fmt.Printf("%v", msg)
+	fmt.Printf("\n%v\n", msg)
 	fmt.Print("Enter username: ")
 	fmt.Scanf("%s", &user.name)
 	fmt.Print("Enter password: ")
@@ -52,7 +52,7 @@ func createUser(users []User) (bool, User) {
 		if validUser {
 			fmt.Printf("User %v already exists. Try a different user name.\n", userToCreate.name)
 		} else {
-			fmt.Print("Confirm password: ")
+			fmt.Print("\nConfirm password: ")
 			fmt.Scanf("%s", &confPass)
 			if userToCreate.pass == confPass {
 				fmt.Printf("Success. Creating user %v\n", userToCreate.name)
