@@ -200,6 +200,67 @@ func handleMainMenu(menuOption Menu, users []User, userToLogin User) (User, erro
 	return User{}, errors.New("Menu Error")
 }
 
+func displayTodos(userToLogin User, listTodos []Todo, allTodos bool) {
+	printItems := 0
+	for _, todo := range listTodos {
+		if todo.user == userToLogin.name {
+			if allTodos {
+				fmt.Printf("%v\n", todo.name)
+				printItems++
+			} else {
+				if !todo.isDone {
+					fmt.Printf("%v\n", todo.name)
+					printItems++
+				}
+			}
+		}
+	}
+	if printItems == 0 {
+		if allTodos {
+			fmt.Printf("User %v does not have any todos\n", userToLogin.name)
+		} else {
+			fmt.Printf("User %v does not have any pending todos\n", userToLogin.name)
+		}
+
+	}
+
+}
+
+func handleTodoMenu(userToLogin User, menuOption Menu, listTodos []Todo) (string, error) {
+	switch menuOption.instruction {
+	case "create":
+		fmt.Println("Create todo logic")
+		return "continue", nil
+	case "delete":
+		fmt.Println("Delete todo logic")
+		return "continue", nil
+	case "change":
+		fmt.Println("Change todo logic")
+		return "continue", nil
+	case "done":
+		fmt.Println("Done todo logic")
+		return "continue", nil
+	case "list":
+		displayTodos(userToLogin, listTodos, false)
+		return "continue", nil
+	case "listAll":
+		displayTodos(userToLogin, listTodos, true)
+		return "continue", nil
+
+	case "previous":
+		return "previous", nil
+
+	case "exit":
+		fmt.Println("Exiting... ")
+		os.Exit(0)
+
+	default:
+		fmt.Println("There is an issue with the application. Leaving...")
+		os.Exit(1)
+	}
+	return "", errors.New("Menu Error")
+}
+
 func main() {
 	// Empty userToLogin
 	userToLogin := User{}
