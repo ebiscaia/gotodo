@@ -8,8 +8,9 @@ import (
 )
 
 type Todo struct {
-	name string
-	user string
+	name   string
+	user   string
+	isDone bool
 }
 
 type User struct {
