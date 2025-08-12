@@ -207,6 +207,8 @@ func main() {
 	todos := []Todo{}
 	todos = append(todos, Todo{name: "take the puppy for a lap", user: "eddie"})
 	todos = append(todos, Todo{name: "take the rubbish out", user: "eddie"})
+	todos = append(todos, Todo{name: "do the tax return", user: "user2", isDone: true})
+	todos = append(todos, Todo{name: "do the shopping", user: "user1"})
 
 	//mockup list of users
 	users := []User{}
