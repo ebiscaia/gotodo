@@ -226,8 +226,17 @@ func main() {
 	}
 
 	// present menu with todo options
-	menuTodoOption := todoMenu()
-	fmt.Printf("Chosen option: %v\n", menuTodoOption.instruction)
+	for {
+		menuTodoOption := todoMenu()
+		result, err := handleTodoMenu(userToLogin, menuTodoOption, todos)
+		if err != nil {
+			fmt.Printf("%v\n", err)
+			os.Exit(1)
+		}
+		if result == "previous" {
+			break
+		}
+	}
 
 	//loop through the todo list
 	for _, todo := range todos {
