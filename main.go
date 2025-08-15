@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"errors"
 	"fmt"
 	"os"
@@ -226,10 +227,23 @@ func displayTodos(userToLogin User, listTodos *[]Todo, allTodos bool) {
 
 }
 
+func createTodo(usrLogin User, lTodos *[]Todo) {
+	scn := bufio.NewScanner(os.Stdin)
+	fmt.Println("Please enter new todo:")
+	if scn.Scan() {
+		*lTodos = append(*lTodos, Todo{name: scn.Text(), user: usrLogin.name})
+
+	} else {
+		fmt.Println("There was an error with todo creation. Leaving...")
+		os.Exit(1)
+	}
+
+}
+
 func handleTodoMenu(userToLogin User, menuOption Menu, listTodos *[]Todo) (string, error) {
 	switch menuOption.instruction {
 	case "create":
-		fmt.Println("Create todo logic")
+		createTodo(userToLogin, listTodos)
 		return "continue", nil
 	case "delete":
 		fmt.Println("Delete todo logic")
