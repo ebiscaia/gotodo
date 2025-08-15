@@ -200,9 +200,9 @@ func handleMainMenu(menuOption Menu, users []User, userToLogin User) (User, erro
 	return User{}, errors.New("Menu Error")
 }
 
-func displayTodos(userToLogin User, listTodos []Todo, allTodos bool) {
+func displayTodos(userToLogin User, listTodos *[]Todo, allTodos bool) {
 	printItems := 0
-	for _, todo := range listTodos {
+	for _, todo := range *listTodos {
 		if todo.user == userToLogin.name {
 			if allTodos {
 				fmt.Printf("%v\n", todo.name)
@@ -226,7 +226,7 @@ func displayTodos(userToLogin User, listTodos []Todo, allTodos bool) {
 
 }
 
-func handleTodoMenu(userToLogin User, menuOption Menu, listTodos []Todo) (string, error) {
+func handleTodoMenu(userToLogin User, menuOption Menu, listTodos *[]Todo) (string, error) {
 	switch menuOption.instruction {
 	case "create":
 		fmt.Println("Create todo logic")
@@ -289,7 +289,7 @@ func main() {
 	// present menu with todo options
 	for {
 		menuTodoOption := todoMenu()
-		result, err := handleTodoMenu(userToLogin, menuTodoOption, todos)
+		result, err := handleTodoMenu(userToLogin, menuTodoOption, &todos)
 		if err != nil {
 			fmt.Printf("%v\n", err)
 			os.Exit(1)
