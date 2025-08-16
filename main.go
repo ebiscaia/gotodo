@@ -201,30 +201,51 @@ func handleMainMenu(menuOption Menu, users []User, userToLogin User) (User, erro
 	return User{}, errors.New("Menu Error")
 }
 
-func displayTodos(userToLogin User, listTodos *[]Todo, allTodos bool) {
-	printItems := 0
-	for _, todo := range *listTodos {
-		if todo.user == userToLogin.name {
+func displayTodos(userToLogin User, listTodos *[]Todo, allTodos bool, index bool) {
+	todosUsr := []Todo{}
+	for _, tdo := range *listTodos {
+		if tdo.user == userToLogin.name {
 			if allTodos {
-				fmt.Printf("%v\n", todo.name)
-				printItems++
+				todosUsr = append(todosUsr, tdo)
 			} else {
-				if !todo.isDone {
-					fmt.Printf("%v\n", todo.name)
-					printItems++
+				if !tdo.isDone {
+					todosUsr = append(todosUsr, tdo)
 				}
 			}
 		}
 	}
-	if printItems == 0 {
+
+	if len(todosUsr) == 0 {
 		if allTodos {
 			fmt.Printf("User %v does not have any todos\n", userToLogin.name)
+			return
 		} else {
 			fmt.Printf("User %v does not have any pending todos\n", userToLogin.name)
+			return
 		}
-
 	}
 
+	if index {
+		if allTodos {
+			for ind, todo := range todosUsr {
+				fmt.Printf("%v - %v %v\n", ind+1, todo.name, todo.isDone)
+			}
+		} else {
+			for ind, todo := range todosUsr {
+				fmt.Printf("%v - %v\n", ind+1, todo.name)
+			}
+		}
+	} else {
+		if allTodos {
+			for _, todo := range todosUsr {
+				fmt.Printf("%v %v\n", todo.name, todo.isDone)
+			}
+		} else {
+			for _, todo := range todosUsr {
+				fmt.Printf("%v %v\n", todo.name, todo.isDone)
+			}
+		}
+	}
 }
 
 func createTodo(usrLogin User, lTodos *[]Todo) {
@@ -237,7 +258,6 @@ func createTodo(usrLogin User, lTodos *[]Todo) {
 		fmt.Println("There was an error with todo creation. Leaving...")
 		os.Exit(1)
 	}
-
 }
 
 func handleTodoMenu(userToLogin User, menuOption Menu, listTodos *[]Todo) (string, error) {
@@ -255,10 +275,10 @@ func handleTodoMenu(userToLogin User, menuOption Menu, listTodos *[]Todo) (strin
 		fmt.Println("Done todo logic")
 		return "continue", nil
 	case "list":
-		displayTodos(userToLogin, listTodos, false)
+		displayTodos(userToLogin, listTodos, false, false)
 		return "continue", nil
 	case "listAll":
-		displayTodos(userToLogin, listTodos, true)
+		displayTodos(userToLogin, listTodos, true, false)
 		return "continue", nil
 
 	case "previous":
