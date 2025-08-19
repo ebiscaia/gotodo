@@ -266,34 +266,39 @@ func createTodo(usrLogin User, lTodos *[]Todo) {
 	}
 }
 
-func deleteTodo(usrLogin User, lTodos *[]Todo) {
-	displayTodos(usrLogin, lTodos, false, true)
-	index := 0
-	var err error
-	todosUsr := userTodos(lTodos, usrLogin, false)
-	if len(todosUsr) == 0 {
-		return
-	}
+func inputIndex(lenTodo int, funcParent string) int {
 	scn := bufio.NewScanner(os.Stdin)
+	message := ""
+	switch funcParent {
+	case "delete":
+		message = "Enter index of todo to delete: "
+	case "change":
+		message = "Enter index of todo to be changed: "
+	case "done":
+		message = "Enter index of todo to have status changed: "
+	}
 	for {
-		fmt.Println("Enter index of todo to delete: ")
+		fmt.Println(message)
 		if !scn.Scan() {
 			fmt.Println("There is an internal error. Leaving...")
 			os.Exit(1)
 		}
-		index, err = strconv.Atoi(scn.Text())
+		index, err := strconv.Atoi(scn.Text())
 		if err != nil {
 			fmt.Printf("The following error has occured: %v\n", err)
 			fmt.Println("Leaving...")
 			os.Exit(1)
 		}
-		if index <= 0 || index > len(todosUsr) {
+		if index <= 0 || index > lenTodo {
 			fmt.Println("Index is out of range. Please try again.")
-		} else {
-			break
+			continue
 		}
+		index--
+		return index
 	}
-	index--
+}
+
+func removeTodoAtIndex(usrLogin User, lTodos *[]Todo, todosUsr []Todo, index int) {
 	for pos := range *lTodos {
 		if (*lTodos)[pos].user != usrLogin.name {
 			continue
@@ -303,6 +308,16 @@ func deleteTodo(usrLogin User, lTodos *[]Todo) {
 			break
 		}
 	}
+}
+
+func deleteTodo(usrLogin User, lTodos *[]Todo) {
+	displayTodos(usrLogin, lTodos, false, true)
+	todosUsr := userTodos(lTodos, usrLogin, false)
+	if len(todosUsr) == 0 {
+		return
+	}
+	index := inputIndex(len(todosUsr), "delete")
+	removeTodoAtIndex(usrLogin, lTodos, todosUsr, index)
 }
 
 func handleTodoMenu(userToLogin User, menuOption Menu, listTodos *[]Todo) (string, error) {
