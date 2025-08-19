@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"slices"
+	"strconv"
 )
 
 type Todo struct {
@@ -201,7 +202,7 @@ func handleMainMenu(menuOption Menu, users []User, userToLogin User) (User, erro
 	return User{}, errors.New("Menu Error")
 }
 
-func displayTodos(userToLogin User, listTodos *[]Todo, allTodos bool, index bool) {
+func userTodos(listTodos *[]Todo, userToLogin User, allTodos bool) []Todo {
 	todosUsr := []Todo{}
 	for _, tdo := range *listTodos {
 		if tdo.user == userToLogin.name {
@@ -214,6 +215,11 @@ func displayTodos(userToLogin User, listTodos *[]Todo, allTodos bool, index bool
 			}
 		}
 	}
+	return todosUsr
+}
+
+func displayTodos(userToLogin User, listTodos *[]Todo, allTodos bool, index bool) {
+	todosUsr := userTodos(listTodos, userToLogin, allTodos)
 
 	if len(todosUsr) == 0 {
 		if allTodos {
@@ -260,13 +266,52 @@ func createTodo(usrLogin User, lTodos *[]Todo) {
 	}
 }
 
+func deleteTodo(usrLogin User, lTodos *[]Todo) {
+	displayTodos(usrLogin, lTodos, false, true)
+	index := 0
+	var err error
+	todosUsr := userTodos(lTodos, usrLogin, false)
+	if len(todosUsr) == 0 {
+		return
+	}
+	scn := bufio.NewScanner(os.Stdin)
+	for {
+		fmt.Println("Enter index of todo to delete: ")
+		if !scn.Scan() {
+			fmt.Println("There is an internal error. Leaving...")
+			os.Exit(1)
+		}
+		index, err = strconv.Atoi(scn.Text())
+		if err != nil {
+			fmt.Printf("The following error has occured: %v\n", err)
+			fmt.Println("Leaving...")
+			os.Exit(1)
+		}
+		if index <= 0 || index > len(todosUsr) {
+			fmt.Println("Index is out of range. Please try again.")
+		} else {
+			break
+		}
+	}
+	index--
+	for pos := range *lTodos {
+		if (*lTodos)[pos].user != usrLogin.name {
+			continue
+		}
+		if (*lTodos)[pos].name == todosUsr[index].name {
+			*lTodos = slices.Delete(*lTodos, pos, pos+1)
+			break
+		}
+	}
+}
+
 func handleTodoMenu(userToLogin User, menuOption Menu, listTodos *[]Todo) (string, error) {
 	switch menuOption.instruction {
 	case "create":
 		createTodo(userToLogin, listTodos)
 		return "continue", nil
 	case "delete":
-		fmt.Println("Delete todo logic")
+		deleteTodo(userToLogin, listTodos)
 		return "continue", nil
 	case "change":
 		fmt.Println("Change todo logic")
