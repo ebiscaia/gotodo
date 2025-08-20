@@ -320,6 +320,34 @@ func deleteTodo(usrLogin User, lTodos *[]Todo) {
 	removeTodoAtIndex(usrLogin, lTodos, todosUsr, index)
 }
 
+func changeTodoAtIndex(usrLogin User, lTodos *[]Todo, todosUsr []Todo, index int) {
+	scn := bufio.NewScanner(os.Stdin)
+	for pos := range *lTodos {
+		if (*lTodos)[pos].user != usrLogin.name {
+			continue
+		}
+		if (*lTodos)[pos].name == todosUsr[index].name {
+			fmt.Println("Enter new todo:")
+			if scn.Scan() {
+				(*lTodos)[pos].name = scn.Text()
+				break
+			}
+			fmt.Println("There was an error with todo creation. Leaving...")
+			os.Exit(1)
+		}
+	}
+}
+
+func changeTodo(usrLogin User, lTodos *[]Todo) {
+	displayTodos(usrLogin, lTodos, false, true)
+	todosUsr := userTodos(lTodos, usrLogin, false)
+	if len(todosUsr) == 0 {
+		return
+	}
+	index := inputIndex(len(todosUsr), "change")
+	changeTodoAtIndex(usrLogin, lTodos, todosUsr, index)
+}
+
 func handleTodoMenu(userToLogin User, menuOption Menu, listTodos *[]Todo) (string, error) {
 	switch menuOption.instruction {
 	case "create":
@@ -329,7 +357,7 @@ func handleTodoMenu(userToLogin User, menuOption Menu, listTodos *[]Todo) (strin
 		deleteTodo(userToLogin, listTodos)
 		return "continue", nil
 	case "change":
-		fmt.Println("Change todo logic")
+		changeTodo(userToLogin, listTodos)
 		return "continue", nil
 	case "done":
 		fmt.Println("Done todo logic")
