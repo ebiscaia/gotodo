@@ -431,19 +431,10 @@ func handleTodoMenu(userToLogin User, menuOption Menu, listTodos *[]Todo) (strin
 }
 
 func main() {
-	// Empty userToLogin
+	// Some initial variables
 	userToLogin := User{}
-
-	//mockup list of todos
-	todos := []Todo{}
-	todos = append(todos, Todo{name: "take the puppy for a lap", user: "eddie"})
-	todos = append(todos, Todo{name: "take the rubbish out", user: "eddie", isDone: true})
-	todos = append(todos, Todo{name: "do the tax return", user: "user2", isDone: true})
-	todos = append(todos, Todo{name: "do the shopping", user: "user1"})
-
-	//mockup list of users
 	users := []User{}
-	users = append(users, User{name: "user1", pass: "pass1"}, User{name: "user2", pass: "pass2"})
+	todos := []Todo{}
 
 	//menu items
 	menuOption := startMenu(users)
@@ -468,8 +459,5 @@ func main() {
 		}
 	}
 
-	//loop through the todo list
-	for _, todo := range todos {
-		fmt.Printf("Todo: %v\n", todo.name)
 	}
 }
