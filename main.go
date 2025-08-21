@@ -348,6 +348,53 @@ func changeTodo(usrLogin User, lTodos *[]Todo) {
 	changeTodoAtIndex(usrLogin, lTodos, todosUsr, index)
 }
 
+func changeStatusAtIndex(usrLogin User, lTodos *[]Todo, todosUsr []Todo, index int) {
+	scn := bufio.NewScanner(os.Stdin)
+	statusStr := "not done"
+	for pos := range *lTodos {
+		if (*lTodos)[pos].user != usrLogin.name {
+			continue
+		}
+		if (*lTodos)[pos].name == todosUsr[index].name {
+			fmt.Print("The current status of the task is: ")
+			if (*lTodos)[pos].isDone {
+				statusStr = "done"
+			}
+			fmt.Printf("%v\n", statusStr)
+
+			for {
+				fmt.Println("Would you like to change it (y/n): ")
+				if scn.Scan() {
+					option := scn.Text()
+					if option != "y" && option != "n" {
+						fmt.Println("Please choose a proper option")
+						continue
+					}
+					if option == "y" {
+						(*lTodos)[pos].isDone = !(*lTodos)[pos].isDone
+						break
+					}
+					if option == "n" {
+						break
+					}
+					fmt.Println("There was an error with todo creation. Leaving...")
+					os.Exit(1)
+				}
+			}
+		}
+	}
+}
+
+func changeStatusTodo(usrLogin User, lTodos *[]Todo) {
+	displayTodos(usrLogin, lTodos, true, true)
+	todosUsr := userTodos(lTodos, usrLogin, true)
+	if len(todosUsr) == 0 {
+		return
+	}
+	index := inputIndex(len(todosUsr), "done")
+	changeStatusAtIndex(usrLogin, lTodos, todosUsr, index)
+}
+
 func handleTodoMenu(userToLogin User, menuOption Menu, listTodos *[]Todo) (string, error) {
 	switch menuOption.instruction {
 	case "create":
@@ -360,7 +407,7 @@ func handleTodoMenu(userToLogin User, menuOption Menu, listTodos *[]Todo) (strin
 		changeTodo(userToLogin, listTodos)
 		return "continue", nil
 	case "done":
-		fmt.Println("Done todo logic")
+		changeStatusTodo(userToLogin, listTodos)
 		return "continue", nil
 	case "list":
 		displayTodos(userToLogin, listTodos, false, false)
