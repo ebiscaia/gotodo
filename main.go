@@ -436,28 +436,28 @@ func main() {
 	users := []User{}
 	todos := []Todo{}
 
-	//menu items
-	menuOption := startMenu(users)
-
-	//go to login, create user or exit depending on chosen option
-	userToLogin, err := handleMainMenu(menuOption, users, userToLogin)
-	if err != nil {
-		fmt.Printf("%v\n", err)
-		os.Exit(1)
-	}
-
-	// present menu with todo options
+	//main loop
 	for {
-		menuTodoOption := todoMenu()
-		result, err := handleTodoMenu(userToLogin, menuTodoOption, &todos)
+		menuOption := startMenu(users)
+
+		//go to login, create user or exit depending on chosen option
+		userToLogin, err := handleMainMenu(menuOption, users, userToLogin)
 		if err != nil {
 			fmt.Printf("%v\n", err)
 			os.Exit(1)
 		}
-		if result == "previous" {
-			break
-		}
-	}
 
+		// present menu with todo options
+		for {
+			menuTodoOption := todoMenu()
+			result, err := handleTodoMenu(userToLogin, menuTodoOption, &todos)
+			if err != nil {
+				fmt.Printf("%v\n", err)
+				os.Exit(1)
+			}
+			if result == "previous" {
+				break
+			}
+		}
 	}
 }
