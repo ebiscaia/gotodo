@@ -80,11 +80,16 @@ func loginUser(userToLogin *User, users []User) error {
 					fmt.Printf("Login successful for %v\n", userToLogin.name)
 					return nil
 				}
-				return errors.New("Wrong password")
+				fmt.Println("Wrong password. Try again")
 			}
-			return errors.New("User does not exist")
+			fmt.Println("Wrong user. Try again")
 		}
 	}
+	return nil
+}
+
+func logoutUser(userToLogin *User) error {
+	*userToLogin = User{}
 	return nil
 }
 
@@ -136,14 +141,21 @@ func inputMenu(menuItems []Menu) Menu {
 	return menuChosen
 }
 
-func startMenu(users []User) Menu {
+func startMenu(users []User, curUser User) Menu {
 	menuStart := []Menu{}
 	menuStart = append(menuStart, Menu{message: "Create user", instruction: "create"})
 	menuStart = append(menuStart, Menu{message: "Login", instruction: "login"})
+	menuStart = append(menuStart, Menu{message: "Logout", instruction: "logout"})
 	menuStart = append(menuStart, Menu{message: "Exit", instruction: "exit"})
 
 	if len(users) == 0 {
-		menuStart = slices.Delete(menuStart, 1, 2)
+		menuStart = slices.Delete(menuStart, 1, 3)
+	} else {
+		if curUser.name == "" {
+			menuStart = slices.Delete(menuStart, 2, 3)
+		} else {
+			menuStart = slices.Delete(menuStart, 0, 2)
+		}
 	}
 
 	menuChosen := inputMenu(menuStart)
@@ -165,26 +177,30 @@ func todoMenu() Menu {
 	return menuChosen
 }
 
-func handleMainMenu(menuOption Menu, users []User, userToLogin *User) error {
+func handleMainMenu(menuOption Menu, users *[]User, userToLogin *User) error {
 	switch menuOption.instruction {
 	case "create":
-		successCreate, userToCreate := createUser(users)
+		successCreate, userToCreate := createUser(*users)
 		if successCreate {
-			users = append(users, userToCreate)
+			*users = append(*users, userToCreate)
 			*userToLogin = userToCreate
 		}
 
-		err := loginUser(userToLogin, users)
+		err := loginUser(userToLogin, *users)
 		if err == nil {
 			fmt.Printf("User %v is logged in\n", userToLogin.name)
 		}
 		return err
 
 	case "login":
-		err := loginUser(userToLogin, users)
+		err := loginUser(userToLogin, *users)
 		if err == nil {
 			fmt.Printf("User %v is logged in\n", userToLogin.name)
 		}
+		return err
+
+	case "logout":
+		err := logoutUser(userToLogin)
 		return err
 
 	case "exit":
@@ -433,16 +449,22 @@ func main() {
 
 	//main loop
 	for {
-		menuOption := startMenu(users)
+		//present initial menu
+		menuOption := startMenu(users, userToLogin)
 
-		//go to login, create user or exit depending on chosen option
-		err := handleMainMenu(menuOption, users, &userToLogin)
+		//go to login, create user, logout or exit depending on chosen option
+		err := handleMainMenu(menuOption, &users, &userToLogin)
 		if err != nil {
 			fmt.Printf("%v\n", err)
 			os.Exit(1)
 		}
 
-		// present menu with todo options
+		// Do not allow an empty user to deal with todos
+		if userToLogin.name == "" {
+			continue
+		}
+
+		// present menu with todo options after a user is logged in
 		for {
 			menuTodoOption := todoMenu()
 			result, err := handleTodoMenu(userToLogin, menuTodoOption, &todos)
