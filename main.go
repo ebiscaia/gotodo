@@ -7,8 +7,10 @@ import (
 	"os"
 	"slices"
 	"strconv"
+	"syscall"
 
 	"golang.org/x/crypto/bcrypt"
+	"golang.org/x/term"
 )
 
 type Todo struct {
@@ -28,6 +30,14 @@ type Menu struct {
 	index       int
 }
 
+func inputHidden() string {
+	input, err := term.ReadPassword(int(syscall.Stdin))
+	if err != nil {
+		fmt.Printf("%v\n", err)
+	}
+	return string(input)
+}
+
 func inputUserPass(msg string) (string, string) {
 	userName := ""
 	userPass := ""
@@ -35,7 +45,7 @@ func inputUserPass(msg string) (string, string) {
 	fmt.Print("Enter username: ")
 	fmt.Scanf("%s", &userName)
 	fmt.Print("Enter password: ")
-	fmt.Scanf("%s", &userPass)
+	userPass = inputHidden()
 	return userName, userPass
 }
 
@@ -71,7 +81,7 @@ func setNewUser(userName string, userPass string) User {
 	// password needs to be encripted
 	hashed, err := HashPassword(userPass, 12)
 	if err != nil {
-		fmt.Print("%v", err)
+		fmt.Printf("%v\n", err)
 		os.Exit(1)
 	}
 	newUser.pass = hashed
@@ -86,8 +96,10 @@ func createUser(users []User) (bool, User) {
 		if validUser {
 			fmt.Printf("User %v already exists. Try a different user name.\n", tempUserName)
 		} else {
+			fmt.Println()
 			fmt.Print("Confirm password: ")
-			fmt.Scanf("%s", &confPass)
+			confPass = inputHidden()
+			fmt.Println()
 			if tempUserPass == confPass {
 				fmt.Printf("Success. Creating user %v\n", tempUserName)
 				// set user with encryption
@@ -108,6 +120,7 @@ func loginUser(userToLogin *User, users []User) error {
 			userName, userPass := inputUserPass("Logging in")
 			//check user
 			validUser, userToCheck := checkUser(userName, users)
+			fmt.Println()
 			if validUser {
 				validPass := checkPass(userPass, userToCheck)
 				if validPass == nil {
