@@ -195,13 +195,14 @@ func startMenu(users []User, curUser User) Menu {
 	menuStart = append(menuStart, Menu{message: "Create user", instruction: "create"})
 	menuStart = append(menuStart, Menu{message: "Login", instruction: "login"})
 	menuStart = append(menuStart, Menu{message: "Logout", instruction: "logout"})
+	menuStart = append(menuStart, Menu{message: "Return to todo menu", instruction: "todo"})
 	menuStart = append(menuStart, Menu{message: "Exit", instruction: "exit"})
 
 	if len(users) == 0 {
-		menuStart = slices.Delete(menuStart, 1, 3)
+		menuStart = slices.Delete(menuStart, 1, 4)
 	} else {
 		if curUser.name == "" {
-			menuStart = slices.Delete(menuStart, 2, 3)
+			menuStart = slices.Delete(menuStart, 2, 4)
 		} else {
 			menuStart = slices.Delete(menuStart, 0, 2)
 		}
@@ -217,7 +218,7 @@ func todoMenu() Menu {
 	menuTodo = append(menuTodo, Menu{instruction: "create", message: "Create todo"})
 	menuTodo = append(menuTodo, Menu{instruction: "delete", message: "Delete todo"})
 	menuTodo = append(menuTodo, Menu{instruction: "change", message: "Change todo"})
-	menuTodo = append(menuTodo, Menu{instruction: "done", message: "Mark as done"})
+	menuTodo = append(menuTodo, Menu{instruction: "done", message: "Mark as done/undone"})
 	menuTodo = append(menuTodo, Menu{instruction: "list", message: "List pending todos"})
 	menuTodo = append(menuTodo, Menu{instruction: "listAll", message: "List all todos"})
 	menuTodo = append(menuTodo, Menu{instruction: "previous", message: "Previous menu"})
@@ -251,6 +252,9 @@ func handleMainMenu(menuOption Menu, users *[]User, userToLogin *User) error {
 	case "logout":
 		err := logoutUser(userToLogin)
 		return err
+
+	case "todo":
+		return nil
 
 	case "exit":
 		fmt.Println("Exiting... ")
