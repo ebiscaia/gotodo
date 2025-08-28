@@ -7,6 +7,8 @@ import (
 	"os"
 	"slices"
 	"strconv"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 type Todo struct {
@@ -26,41 +28,70 @@ type Menu struct {
 	index       int
 }
 
-func inputUserPass(msg string) User {
-	user := User{}
+func inputUserPass(msg string) (string, string) {
+	userName := ""
+	userPass := ""
 	fmt.Printf("\n%v\n", msg)
 	fmt.Print("Enter username: ")
-	fmt.Scanf("%s", &user.name)
+	fmt.Scanf("%s", &userName)
 	fmt.Print("Enter password: ")
-	fmt.Scanf("%s", &user.pass)
-	return user
+	fmt.Scanf("%s", &userPass)
+	return userName, userPass
 }
 
-func checkUserPass(usr User, userSlice []User) (bool, bool) {
+func checkUser(usr string, userSlice []User) (bool, User) {
 	for _, user := range userSlice {
-		if usr.name == user.name {
-			if usr.pass == user.pass {
-				return true, true
-			} else {
-				return true, false
-			}
+		if usr == user.name {
+			return true, user
 		}
 	}
-	return false, false
+	return false, User{}
+}
+
+func checkPass(pass string, usr User) error {
+	err := bcrypt.CompareHashAndPassword([]byte(usr.pass), []byte(pass))
+	return err
+}
+
+func HashPassword(pass string, cost int) (string, error) {
+	//default value for cost
+	if cost == 0 {
+		cost = 12
+	}
+	hash, err := bcrypt.GenerateFromPassword([]byte(pass), cost)
+	if err != nil {
+		return "", err
+	}
+	return string(hash), err
+}
+
+func setNewUser(userName string, userPass string) User {
+	newUser := User{}
+	newUser.name = userName
+	// password needs to be encripted
+	hashed, err := HashPassword(userPass, 12)
+	if err != nil {
+		fmt.Print("%v", err)
+		os.Exit(1)
+	}
+	newUser.pass = hashed
+	return newUser
 }
 
 func createUser(users []User) (bool, User) {
 	for {
-		userToCreate := inputUserPass("Creating a new user")
+		tempUserName, tempUserPass := inputUserPass("Creating a new user")
 		confPass := ""
-		validUser, _ := checkUserPass(userToCreate, users)
+		validUser, _ := checkUser(tempUserName, users)
 		if validUser {
-			fmt.Printf("User %v already exists. Try a different user name.\n", userToCreate.name)
+			fmt.Printf("User %v already exists. Try a different user name.\n", tempUserName)
 		} else {
 			fmt.Print("Confirm password: ")
 			fmt.Scanf("%s", &confPass)
-			if userToCreate.pass == confPass {
-				fmt.Printf("Success. Creating user %v\n", userToCreate.name)
+			if tempUserPass == confPass {
+				fmt.Printf("Success. Creating user %v\n", tempUserName)
+				// set user with encryption
+				userToCreate := setNewUser(tempUserName, tempUserPass)
 				return true, userToCreate
 			} else {
 				fmt.Println("Passwords do not match. Try again")
@@ -69,18 +100,23 @@ func createUser(users []User) (bool, User) {
 	}
 }
 
+// needs some reworking as function has been modified
 func loginUser(userToLogin *User, users []User) error {
-
 	if userToLogin.name == "" {
 		for {
-			*userToLogin = inputUserPass("Logging in")
-			validUser, validPass := checkUserPass(*userToLogin, users)
+			//input user name and pass
+			userName, userPass := inputUserPass("Logging in")
+			//check user
+			validUser, userToCheck := checkUser(userName, users)
 			if validUser {
-				if validPass {
+				validPass := checkPass(userPass, userToCheck)
+				if validPass == nil {
+					*userToLogin = userToCheck
 					fmt.Printf("Login successful for %v\n", userToLogin.name)
 					return nil
 				}
 				fmt.Println("Wrong password. Try again")
+				continue
 			}
 			fmt.Println("Wrong user. Try again")
 		}
