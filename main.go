@@ -1,21 +1,14 @@
 package main
 
 import (
-	"bufio"
 	"errors"
 	"fmt"
 	"os"
 	"slices"
-	"strconv"
 
+	"gotodo/todo"
 	"gotodo/user"
 )
-
-type Todo struct {
-	name   string
-	user   string
-	isDone bool
-}
 
 type Menu struct {
 	message     string
@@ -147,218 +140,25 @@ func handleMainMenu(menuOption Menu, users *[]user.User, userToLogin *user.User)
 	return errors.New("there is an issue with the application")
 }
 
-func userTodos(listTodos *[]Todo, userToLogin user.User, allTodos bool) []Todo {
-	todosUsr := []Todo{}
-	for _, tdo := range *listTodos {
-		if tdo.user == userToLogin.Name {
-			if allTodos {
-				todosUsr = append(todosUsr, tdo)
-			} else {
-				if !tdo.isDone {
-					todosUsr = append(todosUsr, tdo)
-				}
-			}
-		}
-	}
-	return todosUsr
-}
-
-func displayTodos(userToLogin user.User, listTodos *[]Todo, allTodos bool, index bool) {
-	todosUsr := userTodos(listTodos, userToLogin, allTodos)
-
-	if len(todosUsr) == 0 {
-		if allTodos {
-			fmt.Printf("User %v does not have any todos\n", userToLogin.Name)
-			return
-		} else {
-			fmt.Printf("User %v does not have any pending todos\n", userToLogin.Name)
-			return
-		}
-	}
-
-	if index {
-		if allTodos {
-			for ind, todo := range todosUsr {
-				fmt.Printf("%v - %v %v\n", ind+1, todo.name, todo.isDone)
-			}
-		} else {
-			for ind, todo := range todosUsr {
-				fmt.Printf("%v - %v\n", ind+1, todo.name)
-			}
-		}
-	} else {
-		if allTodos {
-			for _, todo := range todosUsr {
-				fmt.Printf("%v %v\n", todo.name, todo.isDone)
-			}
-		} else {
-			for _, todo := range todosUsr {
-				fmt.Printf("%v %v\n", todo.name, todo.isDone)
-			}
-		}
-	}
-}
-
-func createTodo(usrLogin user.User, lTodos *[]Todo) {
-	scn := bufio.NewScanner(os.Stdin)
-	fmt.Println("Please enter new todo:")
-	if scn.Scan() {
-		*lTodos = append(*lTodos, Todo{name: scn.Text(), user: usrLogin.Name})
-
-	} else {
-		fmt.Println("There was an error with todo creation. Leaving...")
-		os.Exit(1)
-	}
-}
-
-func inputIndex(lenTodo int, funcParent string) int {
-	scn := bufio.NewScanner(os.Stdin)
-	message := ""
-	switch funcParent {
-	case "delete":
-		message = "Enter index of todo to delete: "
-	case "change":
-		message = "Enter index of todo to be changed: "
-	case "done":
-		message = "Enter index of todo to have status changed: "
-	}
-	for {
-		fmt.Println(message)
-		if !scn.Scan() {
-			fmt.Println("There is an internal error. Leaving...")
-			os.Exit(1)
-		}
-		index, err := strconv.Atoi(scn.Text())
-		if err != nil {
-			fmt.Printf("The following error has occured: %v\n", err)
-			fmt.Println("Leaving...")
-			os.Exit(1)
-		}
-		if index <= 0 || index > lenTodo {
-			fmt.Println("Index is out of range. Please try again.")
-			continue
-		}
-		index--
-		return index
-	}
-}
-
-func removeTodoAtIndex(usrLogin user.User, lTodos *[]Todo, todosUsr []Todo, index int) {
-	for pos := range *lTodos {
-		if (*lTodos)[pos].user != usrLogin.Name {
-			continue
-		}
-		if (*lTodos)[pos].name == todosUsr[index].name {
-			*lTodos = slices.Delete(*lTodos, pos, pos+1)
-			break
-		}
-	}
-}
-
-func deleteTodo(usrLogin user.User, lTodos *[]Todo) {
-	displayTodos(usrLogin, lTodos, false, true)
-	todosUsr := userTodos(lTodos, usrLogin, false)
-	if len(todosUsr) == 0 {
-		return
-	}
-	index := inputIndex(len(todosUsr), "delete")
-	removeTodoAtIndex(usrLogin, lTodos, todosUsr, index)
-}
-
-func changeTodoAtIndex(usrLogin user.User, lTodos *[]Todo, todosUsr []Todo, index int) {
-	scn := bufio.NewScanner(os.Stdin)
-	for pos := range *lTodos {
-		if (*lTodos)[pos].user != usrLogin.Name {
-			continue
-		}
-		if (*lTodos)[pos].name == todosUsr[index].name {
-			fmt.Println("Enter new todo:")
-			if scn.Scan() {
-				(*lTodos)[pos].name = scn.Text()
-				break
-			}
-			fmt.Println("There was an error with todo creation. Leaving...")
-			os.Exit(1)
-		}
-	}
-}
-
-func changeTodo(usrLogin user.User, lTodos *[]Todo) {
-	displayTodos(usrLogin, lTodos, false, true)
-	todosUsr := userTodos(lTodos, usrLogin, false)
-	if len(todosUsr) == 0 {
-		return
-	}
-	index := inputIndex(len(todosUsr), "change")
-	changeTodoAtIndex(usrLogin, lTodos, todosUsr, index)
-}
-
-func changeStatusAtIndex(usrLogin user.User, lTodos *[]Todo, todosUsr []Todo, index int) {
-	scn := bufio.NewScanner(os.Stdin)
-	statusStr := "not done"
-	for pos := range *lTodos {
-		if (*lTodos)[pos].user != usrLogin.Name {
-			continue
-		}
-		if (*lTodos)[pos].name == todosUsr[index].name {
-			fmt.Print("The current status of the task is: ")
-			if (*lTodos)[pos].isDone {
-				statusStr = "done"
-			}
-			fmt.Printf("%v\n", statusStr)
-
-			for {
-				fmt.Println("Would you like to change it (y/n): ")
-				if scn.Scan() {
-					option := scn.Text()
-					if option != "y" && option != "n" {
-						fmt.Println("Please choose a proper option")
-						continue
-					}
-					if option == "y" {
-						(*lTodos)[pos].isDone = !(*lTodos)[pos].isDone
-						break
-					}
-					if option == "n" {
-						break
-					}
-					fmt.Println("There was an error with todo creation. Leaving...")
-					os.Exit(1)
-				}
-			}
-		}
-	}
-}
-
-func changeStatusTodo(usrLogin user.User, lTodos *[]Todo) {
-	displayTodos(usrLogin, lTodos, true, true)
-	todosUsr := userTodos(lTodos, usrLogin, true)
-	if len(todosUsr) == 0 {
-		return
-	}
-	index := inputIndex(len(todosUsr), "done")
-	changeStatusAtIndex(usrLogin, lTodos, todosUsr, index)
-}
-
-func handleTodoMenu(userToLogin user.User, menuOption Menu, listTodos *[]Todo) (string, error) {
+func handleTodoMenu(userToLogin user.User, menuOption Menu, listTodos *[]todo.Todo) (string, error) {
 	switch menuOption.instruction {
 	case "create":
-		createTodo(userToLogin, listTodos)
+		todo.CreateTodo(userToLogin, listTodos)
 		return "continue", nil
 	case "delete":
-		deleteTodo(userToLogin, listTodos)
+		todo.DeleteTodo(userToLogin, listTodos)
 		return "continue", nil
 	case "change":
-		changeTodo(userToLogin, listTodos)
+		todo.ChangeTodo(userToLogin, listTodos)
 		return "continue", nil
 	case "done":
-		changeStatusTodo(userToLogin, listTodos)
+		todo.ChangeStatusTodo(userToLogin, listTodos)
 		return "continue", nil
 	case "list":
-		displayTodos(userToLogin, listTodos, false, false)
+		todo.DisplayTodos(userToLogin, listTodos, false, false)
 		return "continue", nil
 	case "listAll":
-		displayTodos(userToLogin, listTodos, true, false)
+		todo.DisplayTodos(userToLogin, listTodos, true, false)
 		return "continue", nil
 
 	case "previous":
@@ -379,7 +179,7 @@ func main() {
 	// Some initial variables
 	userToLogin := user.User{}
 	users := []user.User{}
-	todos := []Todo{}
+	todos := []todo.Todo{}
 
 	//main loop
 	for {
