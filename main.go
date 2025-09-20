@@ -1,14 +1,69 @@
 package main
 
 import (
+	"context"
+	"encoding/json"
 	"fmt"
+	"io"
+	"net/url"
 	"os"
+	"time"
 
 	"gotodo/todo"
 	"gotodo/user"
+
+	"go.mongodb.org/mongo-driver/v2/mongo"
+	"go.mongodb.org/mongo-driver/v2/mongo/options"
 )
 
+type credential struct {
+	User string `json:"user"`
+	Pass string `json:"pass"`
+	Ip   string `json:"ip"`
+	Port int    `json:"port"`
+}
+
+func (c credential) MongoURI() string {
+	escapedUser := url.QueryEscape(c.User)
+	escapedPass := url.QueryEscape(c.Pass)
+
+	return fmt.Sprintf("mongodb://%s:%s@%s:%d",
+		escapedUser, escapedPass,
+		c.Ip, c.Port)
+}
+
 func main() {
+	//import json file and read it
+	fileName := "credentials.json"
+	jsonFile, err := os.Open(fileName)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	defer jsonFile.Close()
+
+	fmt.Printf("File \"%v\" opened successfully\n", fileName)
+
+	//pass the json data into the struct
+	byteValue, _ := io.ReadAll(jsonFile)
+	mongoCredentials := credential{}
+	json.Unmarshal(byteValue, &mongoCredentials)
+
+	//create the context and connect to the server using the credentials
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+	client, err := mongo.Connect(options.Client().ApplyURI(mongoCredentials.MongoURI()))
+	if err != nil {
+		fmt.Printf("%v\n", err)
+		os.Exit(1)
+	}
+	defer client.Disconnect(ctx)
+
+	// create database and collections
+	// quickStartDatabase := client.Database("todo_app")
+	// podcastsCollections := quickStartDatabase.Collection("users")
+	// episodesCollections := quickStartDatabase.Collection("todo")
+
 	// Some initial variables
 	userToLogin := user.User{}
 	users := []user.User{}
