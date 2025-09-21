@@ -64,7 +64,7 @@ func inputMenu(menuItems []Menu) Menu {
 	return menuChosen
 }
 
-func StartMenu(users []user.User, curUser user.User) Menu {
+func StartMenu(users []user.User, curUser user.User, ctx context.Context, col *mongo.Collection) Menu {
 	menuStart := []Menu{}
 	menuStart = append(menuStart, Menu{message: "Create user", instruction: "create"})
 	menuStart = append(menuStart, Menu{message: "Login", instruction: "login"})
