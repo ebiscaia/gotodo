@@ -1,15 +1,15 @@
 package main
 
 import (
-	"gotodo/todo"
-	"gotodo/user"
-
 	"context"
 	"errors"
 	"fmt"
 	"os"
 	"slices"
+
 	"go.mongodb.org/mongo-driver/v2/mongo"
+	"gotodo/todo"
+	"gotodo/user"
 )
 
 type Menu struct {
