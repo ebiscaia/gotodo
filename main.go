@@ -60,9 +60,8 @@ func main() {
 	defer client.Disconnect(ctx)
 
 	// create database and collections
-	// quickStartDatabase := client.Database("todo_app")
-	// podcastsCollections := quickStartDatabase.Collection("users")
-	// episodesCollections := quickStartDatabase.Collection("todo")
+	db := client.Database("todoapp")
+	usersCollection := db.Collection("users")
 
 	// Some initial variables
 	userToLogin := user.User{}
