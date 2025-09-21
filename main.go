@@ -60,9 +60,8 @@ func main() {
 	defer client.Disconnect(ctx)
 
 	// create database and collections
-	// quickStartDatabase := client.Database("todo_app")
-	// podcastsCollections := quickStartDatabase.Collection("users")
-	// episodesCollections := quickStartDatabase.Collection("todo")
+	db := client.Database("todoapp")
+	usersCollection := db.Collection("users")
 
 	// Some initial variables
 	userToLogin := user.User{}
@@ -72,7 +71,8 @@ func main() {
 	//main loop
 	for {
 		//present initial menu
-		menuOption := StartMenu(users, userToLogin)
+		//modify this to check the number of documents in the database
+		menuOption := StartMenu(users, userToLogin, ctx, usersCollection)
 
 		//go to login, create user, logout or exit depending on chosen option
 		err := HandleMainMenu(menuOption, &users, &userToLogin)
