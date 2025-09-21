@@ -4,10 +4,12 @@ import (
 	"gotodo/todo"
 	"gotodo/user"
 
+	"context"
 	"errors"
 	"fmt"
 	"os"
 	"slices"
+	"go.mongodb.org/mongo-driver/v2/mongo"
 )
 
 type Menu struct {
@@ -72,7 +74,14 @@ func StartMenu(users []user.User, curUser user.User, ctx context.Context, col *m
 	menuStart = append(menuStart, Menu{message: "Return to todo menu", instruction: "todo"})
 	menuStart = append(menuStart, Menu{message: "Exit", instruction: "exit"})
 
-	if len(users) == 0 {
+	// replace len(users) by the number of documents in the users collection
+	toLogin, err := user.CheckUsers(ctx, col)
+	if err != nil {
+		fmt.Printf("%v\n", err)
+		os.Exit(1)
+	}
+
+	if !toLogin {
 		menuStart = slices.Delete(menuStart, 1, 4)
 	} else {
 		if curUser.Name == "" {
