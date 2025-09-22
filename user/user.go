@@ -12,8 +12,8 @@ import (
 )
 
 type User struct {
-	Name string
-	Pass string
+	Name string        `bson:"name"`
+	Pass string        `bson:"pass"`
 }
 
 func inputHidden() string {
