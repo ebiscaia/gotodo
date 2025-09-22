@@ -12,6 +12,7 @@ import (
 )
 
 type User struct {
+	ID   bson.ObjectID `bson:"_id,omitempty"`
 	Name string        `bson:"name"`
 	Pass string        `bson:"pass"`
 }
