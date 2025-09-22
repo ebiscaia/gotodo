@@ -50,7 +50,7 @@ func main() {
 	json.Unmarshal(byteValue, &mongoCredentials)
 
 	//create the context and connect to the server using the credentials
-	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	client, err := mongo.Connect(options.Client().ApplyURI(mongoCredentials.MongoURI()))
 	if err != nil {
