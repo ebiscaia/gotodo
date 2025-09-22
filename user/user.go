@@ -1,12 +1,14 @@
 package user
 
 import (
-	"golang.org/x/crypto/bcrypt"
-	"golang.org/x/term"
-
 	"fmt"
 	"os"
 	"syscall"
+
+	"golang.org/x/crypto/bcrypt"
+	"golang.org/x/term"
+
+	"go.mongodb.org/mongo-driver/v2/bson"
 )
 
 type User struct {
