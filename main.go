@@ -75,7 +75,7 @@ func main() {
 		menuOption := StartMenu(users, userToLogin, ctx, usersCollection)
 
 		//go to login, create user, logout or exit depending on chosen option
-		err := HandleMainMenu(menuOption, &users, &userToLogin)
+		err := HandleMainMenu(menuOption, &users, &userToLogin, ctx, usersCollection)
 		if err != nil {
 			fmt.Printf("%v\n", err)
 			os.Exit(1)
