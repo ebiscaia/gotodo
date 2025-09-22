@@ -116,6 +116,12 @@ func HandleMainMenu(menuOption Menu, users *[]user.User, userToLogin *user.User)
 		successCreate, userToCreate := user.CreateUser(*users)
 		if successCreate {
 			*users = append(*users, userToCreate)
+			// add here to the db
+			err := user.AddUserToDB(ctx, col, userToCreate)
+			if err != nil {
+				fmt.Println(err)
+				os.Exit(1)
+			}
 			*userToLogin = userToCreate
 		}
 
