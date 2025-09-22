@@ -110,7 +110,7 @@ func TodoMenu() Menu {
 	return menuChosen
 }
 
-func HandleMainMenu(menuOption Menu, users *[]user.User, userToLogin *user.User) error {
+func HandleMainMenu(menuOption Menu, users *[]user.User, userToLogin *user.User, ctx context.Context, col *mongo.Collection) error {
 	switch menuOption.instruction {
 	case "create":
 		successCreate, userToCreate := user.CreateUser(*users)
