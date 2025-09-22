@@ -18,3 +18,10 @@ func CheckUsers(ctx context.Context, col *mongo.Collection) (bool, error) {
 	return true, nil
 }
 
+func AddUserToDB(ctx context.Context, col *mongo.Collection, us User) error {
+	_, err := col.InsertOne(ctx, us)
+	if err != nil {
+		return err
+	}
+	return nil
+}
