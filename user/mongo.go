@@ -22,6 +22,18 @@ func CheckUsers(col *mongo.Collection) (bool, error) {
 	return true, nil
 }
 
+func FindUserDBCI(col *mongo.Collection, usr User) bool {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	userToFind := User{}
+	// This function is for creating a new user purposes. Therefore, user name
+	// is to be case insesitive
+	err := col.FindOne(ctx,
+		bson.M{"name": bson.M{"$regex": usr.Name, "$options": "i"}}).Decode(&userToFind)
+	return err == nil
+}
+
 func FindUserDB(col *mongo.Collection, usr User) (User, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
