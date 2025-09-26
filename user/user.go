@@ -86,6 +86,8 @@ func CreateUser(col *mongo.Collection, users []User) (bool, User) {
 
 		if FindUserDBCI(col, tempUser) {
 			fmt.Printf("User %v already exists. Usernames are case insensitive (user = User).\n", tempUser.Name)
+			continue
+		}
 		fmt.Println()
 		fmt.Print("Confirm password: ")
 		confPass = inputHidden()
