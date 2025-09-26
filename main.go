@@ -7,7 +7,6 @@ import (
 	"io"
 	"net/url"
 	"os"
-	"time"
 
 	"gotodo/todo"
 	"gotodo/user"
