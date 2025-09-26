@@ -71,10 +71,10 @@ func main() {
 	for {
 		//present initial menu
 		//modify this to check the number of documents in the database
-		menuOption := StartMenu(users, userToLogin, ctx, usersCollection)
+		menuOption := StartMenu(users, userToLogin, usersCollection)
 
 		//go to login, create user, logout or exit depending on chosen option
-		err := HandleMainMenu(menuOption, &users, &userToLogin, ctx, usersCollection)
+		err := HandleMainMenu(menuOption, &users, &userToLogin, usersCollection)
 		if err != nil {
 			fmt.Printf("%v\n", err)
 			os.Exit(1)

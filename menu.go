@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"errors"
 	"fmt"
 	"os"
@@ -66,7 +65,7 @@ func inputMenu(menuItems []Menu) Menu {
 	return menuChosen
 }
 
-func StartMenu(users []user.User, curUser user.User, ctx context.Context, col *mongo.Collection) Menu {
+func StartMenu(users []user.User, curUser user.User, col *mongo.Collection) Menu {
 	menuStart := []Menu{}
 	menuStart = append(menuStart, Menu{message: "Create user", instruction: "create"})
 	menuStart = append(menuStart, Menu{message: "Login", instruction: "login"})
@@ -75,7 +74,7 @@ func StartMenu(users []user.User, curUser user.User, ctx context.Context, col *m
 	menuStart = append(menuStart, Menu{message: "Exit", instruction: "exit"})
 
 	// replace len(users) by the number of documents in the users collection
-	toLogin, err := user.CheckUsers(ctx, col)
+	toLogin, err := user.CheckUsers(col)
 	if err != nil {
 		fmt.Printf("%v\n", err)
 		os.Exit(1)
@@ -110,14 +109,14 @@ func TodoMenu() Menu {
 	return menuChosen
 }
 
-func HandleMainMenu(menuOption Menu, users *[]user.User, userToLogin *user.User, ctx context.Context, col *mongo.Collection) error {
+func HandleMainMenu(menuOption Menu, users *[]user.User, userToLogin *user.User, col *mongo.Collection) error {
 	switch menuOption.instruction {
 	case "create":
 		successCreate, userToCreate := user.CreateUser(*users)
 		if successCreate {
 			*users = append(*users, userToCreate)
 			// add here to the db
-			err := user.AddUserToDB(ctx, col, userToCreate)
+			err := user.AddUserToDB(col, userToCreate)
 			if err != nil {
 				fmt.Println(err)
 				os.Exit(1)
@@ -125,14 +124,14 @@ func HandleMainMenu(menuOption Menu, users *[]user.User, userToLogin *user.User,
 			*userToLogin = userToCreate
 		}
 
-		err := user.LoginUserFromDB(ctx, col, userToLogin)
+		err := user.LoginUserFromDB(col, userToLogin)
 		if err == nil {
 			fmt.Printf("User %v is logged in\n", userToLogin.Name)
 		}
 		return err
 
 	case "login":
-		err := user.LoginUserFromDB(ctx, col, userToLogin)
+		err := user.LoginUserFromDB(col, userToLogin)
 		if err == nil {
 			fmt.Printf("User %v is logged in\n", userToLogin.Name)
 		}
