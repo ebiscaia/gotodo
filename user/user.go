@@ -86,17 +86,16 @@ func CreateUser(col *mongo.Collection, users []User) (bool, User) {
 
 		if FindUserDBCI(col, tempUser) {
 			fmt.Printf("User %v already exists. Usernames are case insensitive (user = User).\n", tempUser.Name)
-		} else {
-			fmt.Println()
-			fmt.Print("Confirm password: ")
-			confPass = inputHidden()
-			fmt.Println()
-			if tempUser.Pass == confPass {
-				fmt.Printf("Success. Creating user %v\n", tempUser.Name)
-				// set user with encryption
-				userToCreate := setNewUser(tempUser.Name, tempUser.Pass)
-				return true, userToCreate
-			}
+		fmt.Println()
+		fmt.Print("Confirm password: ")
+		confPass = inputHidden()
+		fmt.Println()
+
+		if tempUser.Pass == confPass {
+			fmt.Printf("Success. Creating user %v\n", tempUser.Name)
+			// set user with encryption
+			userToCreate := setNewUser(tempUser.Name, tempUser.Pass)
+			return true, userToCreate
 		}
 		fmt.Println("Passwords do not match. Try again")
 	}
