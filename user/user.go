@@ -76,22 +76,25 @@ func setNewUser(userName string, userPass string) User {
 	return newUser
 }
 
-func CreateUser(users []User) (bool, User) {
+func CreateUser(col *mongo.Collection, users []User) (bool, User) {
 	for {
-		tempUserName, tempUserPass := inputUserPass("Creating a new user")
+		tempUser := User{}
+		tempUser.Name, tempUser.Pass = inputUserPass("Creating a new user")
 		confPass := ""
-		validUser, _ := checkUser(tempUserName, users)
-		if validUser {
-			fmt.Printf("User %v already exists. Try a different user name.\n", tempUserName)
+		//check user in the db. if so repeat cicle
+		// also, remove else statements
+
+		if FindUserDBCI(col, tempUser) {
+			fmt.Printf("User %v already exists. Usernames are case insensitive (user = User).\n", tempUser.Name)
 		} else {
 			fmt.Println()
 			fmt.Print("Confirm password: ")
 			confPass = inputHidden()
 			fmt.Println()
-			if tempUserPass == confPass {
-				fmt.Printf("Success. Creating user %v\n", tempUserName)
+			if tempUser.Pass == confPass {
+				fmt.Printf("Success. Creating user %v\n", tempUser.Name)
 				// set user with encryption
-				userToCreate := setNewUser(tempUserName, tempUserPass)
+				userToCreate := setNewUser(tempUser.Name, tempUser.Pass)
 				return true, userToCreate
 			} else {
 				fmt.Println("Passwords do not match. Try again")

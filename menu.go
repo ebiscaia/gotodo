@@ -112,7 +112,7 @@ func TodoMenu() Menu {
 func HandleMainMenu(menuOption Menu, users *[]user.User, userToLogin *user.User, col *mongo.Collection) error {
 	switch menuOption.instruction {
 	case "create":
-		successCreate, userToCreate := user.CreateUser(*users)
+		successCreate, userToCreate := user.CreateUser(col, *users)
 		if successCreate {
 			*users = append(*users, userToCreate)
 			// add here to the db
