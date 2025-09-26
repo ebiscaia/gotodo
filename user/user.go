@@ -96,10 +96,9 @@ func CreateUser(col *mongo.Collection, users []User) (bool, User) {
 				// set user with encryption
 				userToCreate := setNewUser(tempUser.Name, tempUser.Pass)
 				return true, userToCreate
-			} else {
-				fmt.Println("Passwords do not match. Try again")
 			}
 		}
+		fmt.Println("Passwords do not match. Try again")
 	}
 }
 
