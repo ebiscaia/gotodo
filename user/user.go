@@ -1,6 +1,7 @@
 package user
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"syscall"
@@ -9,6 +10,7 @@ import (
 	"golang.org/x/term"
 
 	"go.mongodb.org/mongo-driver/v2/bson"
+	"go.mongodb.org/mongo-driver/v2/mongo"
 )
 
 type User struct {
@@ -99,28 +101,35 @@ func CreateUser(users []User) (bool, User) {
 	}
 }
 
-// needs some reworking as function has been modified
-func LoginUser(userToLogin *User, users []User) error {
+func LoginUserFromDB(ctx context.Context, col *mongo.Collection, userToLogin *User) error {
+	// loop till user and pass match one in the database
 	if userToLogin.Name == "" {
 		for {
-			//input user name and pass
 			userName, userPass := inputUserPass("Logging in")
-			//check user
-			validUser, userToCheck := checkUser(userName, users)
+			*userToLogin = User{Name: userName, Pass: userPass}
 			fmt.Println()
-			if validUser {
-				validPass := checkPass(userPass, userToCheck)
-				if validPass == nil {
-					*userToLogin = userToCheck
-					fmt.Printf("Login successful for %v\n", userToLogin.Name)
-					return nil
-				}
+			// check user
+			// try to find the user from db
+			userToCompare, err := FindUserDB(ctx, col, *userToLogin)
+			if err != nil {
+				fmt.Println("User not found. Try again")
+				*userToLogin = userToCompare
+				continue
+			}
+			validPass := checkPass(userToLogin.Pass, userToCompare)
+			if validPass != nil {
 				fmt.Println("Wrong password. Try again")
 				continue
 			}
-			fmt.Println("Wrong user. Try again")
+			*userToLogin = userToCompare
+			fmt.Printf("Login successful for %v\n", userToLogin.Name)
+			return nil
 		}
 	}
+	// or if it is a new user, update the user with the id set by the db
+	userToCompare, _ := FindUserDB(ctx, col, *userToLogin)
+	*userToLogin = userToCompare
+	fmt.Printf("Login successful for %v\n", userToLogin.Name)
 	return nil
 }
 
