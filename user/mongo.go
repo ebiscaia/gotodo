@@ -7,6 +7,7 @@ import (
 	"go.mongodb.org/mongo-driver/v2/mongo"
 )
 
+// check whether the collection has at least one document
 func CheckUsers(ctx context.Context, col *mongo.Collection) (bool, error) {
 	hasUsers, err := col.CountDocuments(ctx, bson.M{})
 	if err != nil {
