@@ -7,7 +7,6 @@ import (
 	"io"
 	"net/url"
 	"os"
-	"time"
 
 	"gotodo/todo"
 	"gotodo/user"
@@ -50,7 +49,7 @@ func main() {
 	json.Unmarshal(byteValue, &mongoCredentials)
 
 	//create the context and connect to the server using the credentials
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 	client, err := mongo.Connect(options.Client().ApplyURI(mongoCredentials.MongoURI()))
 	if err != nil {
@@ -72,10 +71,10 @@ func main() {
 	for {
 		//present initial menu
 		//modify this to check the number of documents in the database
-		menuOption := StartMenu(users, userToLogin, ctx, usersCollection)
+		menuOption := StartMenu(users, userToLogin, usersCollection)
 
 		//go to login, create user, logout or exit depending on chosen option
-		err := HandleMainMenu(menuOption, &users, &userToLogin, ctx, usersCollection)
+		err := HandleMainMenu(menuOption, &users, &userToLogin, usersCollection)
 		if err != nil {
 			fmt.Printf("%v\n", err)
 			os.Exit(1)

@@ -1,7 +1,6 @@
 package user
 
 import (
-	"context"
 	"fmt"
 	"os"
 	"syscall"
@@ -101,7 +100,7 @@ func CreateUser(users []User) (bool, User) {
 	}
 }
 
-func LoginUserFromDB(ctx context.Context, col *mongo.Collection, userToLogin *User) error {
+func LoginUserFromDB(col *mongo.Collection, userToLogin *User) error {
 	// loop till user and pass match one in the database
 	if userToLogin.Name == "" {
 		for {
@@ -110,7 +109,7 @@ func LoginUserFromDB(ctx context.Context, col *mongo.Collection, userToLogin *Us
 			fmt.Println()
 			// check user
 			// try to find the user from db
-			userToCompare, err := FindUserDB(ctx, col, *userToLogin)
+			userToCompare, err := FindUserDB(col, *userToLogin)
 			if err != nil {
 				fmt.Println("User not found. Try again")
 				*userToLogin = userToCompare
@@ -127,7 +126,7 @@ func LoginUserFromDB(ctx context.Context, col *mongo.Collection, userToLogin *Us
 		}
 	}
 	// or if it is a new user, update the user with the id set by the db
-	userToCompare, _ := FindUserDB(ctx, col, *userToLogin)
+	userToCompare, _ := FindUserDB(col, *userToLogin)
 	*userToLogin = userToCompare
 	fmt.Printf("Login successful for %v\n", userToLogin.Name)
 	return nil
