@@ -99,26 +99,13 @@ func CreateUser(users []User) (bool, User) {
 	}
 }
 
-// needs some reworking as function has been modified
-func LoginUser(userToLogin *User, users []User) error {
 	if userToLogin.Name == "" {
 		for {
-			//input user name and pass
 			userName, userPass := inputUserPass("Logging in")
-			//check user
-			validUser, userToCheck := checkUser(userName, users)
 			fmt.Println()
-			if validUser {
-				validPass := checkPass(userPass, userToCheck)
-				if validPass == nil {
-					*userToLogin = userToCheck
-					fmt.Printf("Login successful for %v\n", userToLogin.Name)
-					return nil
-				}
 				fmt.Println("Wrong password. Try again")
 				continue
 			}
-			fmt.Println("Wrong user. Try again")
 		}
 	}
 	return nil
