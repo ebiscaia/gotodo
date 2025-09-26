@@ -125,14 +125,14 @@ func HandleMainMenu(menuOption Menu, users *[]user.User, userToLogin *user.User,
 			*userToLogin = userToCreate
 		}
 
-		err := user.LoginUser(userToLogin, *users)
+		err := user.LoginUserFromDB(ctx, col, userToLogin)
 		if err == nil {
 			fmt.Printf("User %v is logged in\n", userToLogin.Name)
 		}
 		return err
 
 	case "login":
-		err := user.LoginUser(userToLogin, *users)
+		err := user.LoginUserFromDB(ctx, col, userToLogin)
 		if err == nil {
 			fmt.Printf("User %v is logged in\n", userToLogin.Name)
 		}
