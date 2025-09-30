@@ -76,7 +76,7 @@ func setNewUser(userName string, userPass string) User {
 	return newUser
 }
 
-func CreateUser(col *mongo.Collection, users []User) (bool, User) {
+func CreateUser(col *mongo.Collection) (bool, User) {
 	for {
 		tempUser := User{}
 		tempUser.Name, tempUser.Pass = inputUserPass("Creating a new user")

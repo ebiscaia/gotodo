@@ -65,7 +65,7 @@ func inputMenu(menuItems []Menu) Menu {
 	return menuChosen
 }
 
-func StartMenu(users []user.User, curUser user.User, col *mongo.Collection) Menu {
+func StartMenu(curUser user.User, col *mongo.Collection) Menu {
 	menuStart := []Menu{}
 	menuStart = append(menuStart, Menu{message: "Create user", instruction: "create"})
 	menuStart = append(menuStart, Menu{message: "Login", instruction: "login"})
@@ -109,12 +109,11 @@ func TodoMenu() Menu {
 	return menuChosen
 }
 
-func HandleMainMenu(menuOption Menu, users *[]user.User, userToLogin *user.User, col *mongo.Collection) error {
+func HandleMainMenu(menuOption Menu, userToLogin *user.User, col *mongo.Collection) error {
 	switch menuOption.instruction {
 	case "create":
-		successCreate, userToCreate := user.CreateUser(col, *users)
+		successCreate, userToCreate := user.CreateUser(col)
 		if successCreate {
-			*users = append(*users, userToCreate)
 			// add here to the db
 			err := user.AddUserToDB(col, userToCreate)
 			if err != nil {

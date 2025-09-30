@@ -64,17 +64,16 @@ func main() {
 
 	// Some initial variables
 	userToLogin := user.User{}
-	users := []user.User{}
 	todos := []todo.Todo{}
 
 	//main loop
 	for {
 		//present initial menu
 		//modify this to check the number of documents in the database
-		menuOption := StartMenu(users, userToLogin, usersCollection)
+		menuOption := StartMenu(userToLogin, usersCollection)
 
 		//go to login, create user, logout or exit depending on chosen option
-		err := HandleMainMenu(menuOption, &users, &userToLogin, usersCollection)
+		err := HandleMainMenu(menuOption, &userToLogin, usersCollection)
 		if err != nil {
 			fmt.Printf("%v\n", err)
 			os.Exit(1)
