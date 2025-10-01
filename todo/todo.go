@@ -11,9 +11,10 @@ import (
 )
 
 type Todo struct {
-	Name   string
-	User   string
-	IsDone bool
+	ID     bson.ObjectID `bson:"_id,omitempty"`
+	User   bson.ObjectID `bson:"user"`
+	Td     string        `bson:"td"`
+	IsDone bool          `bson:"isDone"`
 }
 
 func userTodos(listTodos *[]Todo, userToLogin user.User, allTodos bool) []Todo {
@@ -68,12 +69,16 @@ func DisplayTodos(userToLogin user.User, listTodos *[]Todo, allTodos bool, index
 	}
 }
 
-func CreateTodo(usrLogin user.User, lTodos *[]Todo) {
+func CreateTodo(usrLogin user.User, col *mongo.Collection) {
 	scn := bufio.NewScanner(os.Stdin)
 	fmt.Println("Please enter new todo:")
-	if scn.Scan() {
-		*lTodos = append(*lTodos, Todo{Name: scn.Text(), User: usrLogin.Name})
 
+	//use db to save
+	if scn.Scan() {
+		err := AddTodoToDB(col, Todo{Td: scn.Text(), User: usrLogin.ID})
+		if err != nil {
+			fmt.Printf("%v\n", err)
+		}
 	} else {
 		fmt.Println("There was an error with todo creation. Leaving...")
 		os.Exit(1)

@@ -153,11 +153,9 @@ func HandleMainMenu(menuOption Menu, userToLogin *user.User, col *mongo.Collecti
 	return errors.New("there is an issue with the application")
 }
 
-func HandleTodoMenu(userToLogin user.User, menuOption Menu, listTodos *[]todo.Todo) (string, error) {
+func HandleTodoMenu(userToLogin user.User, menuOption Menu, listTodos *[]todo.Todo, col *mongo.Collection) (string, error) {
 	switch menuOption.instruction {
 	case "create":
-		todo.CreateTodo(userToLogin, listTodos)
-		return "continue", nil
 	case "delete":
 		todo.DeleteTodo(userToLogin, listTodos)
 		return "continue", nil
@@ -172,6 +170,7 @@ func HandleTodoMenu(userToLogin user.User, menuOption Menu, listTodos *[]todo.To
 		return "continue", nil
 	case "listAll":
 		todo.DisplayTodos(userToLogin, listTodos, true, false)
+		todo.CreateTodo(userToLogin, col)
 		return "continue", nil
 
 	case "previous":
