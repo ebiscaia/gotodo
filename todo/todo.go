@@ -11,9 +11,10 @@ import (
 )
 
 type Todo struct {
-	Name   string
-	User   string
-	IsDone bool
+	ID     bson.ObjectID `bson:"_id,omitempty"`
+	User   bson.ObjectID `bson:"user"`
+	Td     string        `bson:"td"`
+	IsDone bool          `bson:"isDone"`
 }
 
 func userTodos(listTodos *[]Todo, userToLogin user.User, allTodos bool) []Todo {
