@@ -61,6 +61,7 @@ func main() {
 	// create database and collections
 	db := client.Database("todoapp")
 	usersCollection := db.Collection("users")
+	todoCollection := db.Collection("todo")
 
 	// Some initial variables
 	userToLogin := user.User{}
