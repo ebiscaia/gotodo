@@ -166,11 +166,11 @@ func HandleTodoMenu(userToLogin user.User, menuOption Menu, listTodos *[]todo.To
 		todo.ChangeStatusTodo(userToLogin, listTodos)
 		return "continue", nil
 	case "list":
-		todo.DisplayTodos(userToLogin, listTodos, false, false)
+		todo.DisplayTodos(col, userToLogin, false, false)
 		return "continue", nil
 	case "listAll":
-		todo.DisplayTodos(userToLogin, listTodos, true, false)
 		todo.CreateTodo(userToLogin, col)
+		todo.DisplayTodos(col, userToLogin, true, false)
 		return "continue", nil
 
 	case "previous":
