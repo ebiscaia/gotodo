@@ -23,21 +23,6 @@ type Todo struct {
 	IsDone bool          `bson:"isDone"`
 }
 
-func userTodos(listTodos *[]Todo, userToLogin user.User, allTodos bool) []Todo {
-	todosUsr := []Todo{}
-	for _, tdo := range *listTodos {
-		if tdo.User == userToLogin.Name {
-			if allTodos {
-				todosUsr = append(todosUsr, tdo)
-			} else {
-				if !tdo.IsDone {
-					todosUsr = append(todosUsr, tdo)
-				}
-			}
-		}
-	}
-	return todosUsr
-}
 
 func DisplayTodos(userToLogin user.User, listTodos *[]Todo, allTodos bool, index bool) {
 	todosUsr := userTodos(listTodos, userToLogin, allTodos)
