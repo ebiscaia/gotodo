@@ -23,41 +23,28 @@ type Todo struct {
 	IsDone bool          `bson:"isDone"`
 }
 
+func DisplayTodos(col *mongo.Collection, userToLogin user.User, allTodos bool, index bool) []bson.ObjectID {
 
-func DisplayTodos(userToLogin user.User, listTodos *[]Todo, allTodos bool, index bool) {
-	todosUsr := userTodos(listTodos, userToLogin, allTodos)
+	hasTodos, err := CheckHasTodos(col, userToLogin, allTodos)
+	if err != nil {
+		fmt.Printf("%v\n", err)
+	}
 
-	if len(todosUsr) == 0 {
+	if !hasTodos {
 		if allTodos {
 			fmt.Printf("User %v does not have any todos\n", userToLogin.Name)
-			return
-		} else {
-			fmt.Printf("User %v does not have any pending todos\n", userToLogin.Name)
-			return
+			return []bson.ObjectID{}
 		}
+		fmt.Printf("User %v does not have any pending todos\n", userToLogin.Name)
+		return []bson.ObjectID{}
 	}
 
-	if index {
-		if allTodos {
-			for ind, todo := range todosUsr {
-				fmt.Printf("%v - %v %v\n", ind+1, todo.Name, todo.IsDone)
-			}
-		} else {
-			for ind, todo := range todosUsr {
-				fmt.Printf("%v - %v\n", ind+1, todo.Name)
-			}
-		}
-	} else {
-		if allTodos {
-			for _, todo := range todosUsr {
-				fmt.Printf("%v %v\n", todo.Name, todo.IsDone)
-			}
-		} else {
-			for _, todo := range todosUsr {
-				fmt.Printf("%v %v\n", todo.Name, todo.IsDone)
-			}
-		}
+	//print and return ids as a slice
+	ids, err := PrintTodos(col, userToLogin, allTodos, index)
+	if err != nil {
+		fmt.Printf("%v\n", err)
 	}
+	return ids
 }
 
 func CreateTodo(usrLogin user.User, col *mongo.Collection) {
