@@ -11,6 +11,15 @@ import (
 	"go.mongodb.org/mongo-driver/v2/mongo"
 )
 
+
+func setFilter(usr user.User, printAll bool) bson.M {
+	filter := bson.M{"user": usr.ID}
+	if !printAll {
+		filter = bson.M{"user": usr.ID, "isDone": false}
+	}
+	return filter
+}
+
 func AddTodoToDB(col *mongo.Collection, td Todo) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
