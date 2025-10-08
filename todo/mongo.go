@@ -86,13 +86,13 @@ func PrintTodos(col *mongo.Collection, userToLogin user.User, allTodos bool, ind
 
 		if ind {
 			if allTodos {
-				fmt.Printf("%v - %v (%v)\n", index+1, td.Td, td.IsDone)
+				fmt.Printf("%v - %v (%v)\n", index+1, td.Td, statusText)
 			} else {
 				fmt.Printf("%v - %v\n", index+1, td.Td)
 			}
 		} else {
 			if allTodos {
-				fmt.Printf("%v (%v)\n", td.Td, td.IsDone)
+				fmt.Printf("%v (%v)\n", td.Td, statusText)
 			} else {
 				fmt.Printf("%v\n", td.Td)
 			}
