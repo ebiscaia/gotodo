@@ -9,6 +9,7 @@ import (
 
 	"go.mongodb.org/mongo-driver/v2/bson"
 	"go.mongodb.org/mongo-driver/v2/mongo"
+	"go.mongodb.org/mongo-driver/v2/mongo/options"
 )
 
 
@@ -34,6 +35,60 @@ func CheckHasTodos(col *mongo.Collection, userToLogin user.User, allTodos bool) 
 		return false, nil
 	}
 	return true, nil
+}
+
+func PrintTodos(col *mongo.Collection, userToLogin user.User, allTodos bool, ind bool) ([]bson.ObjectID, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	// set an slice of ids that will be returned to
+	// delete, change and change status functions
+	ids := []bson.ObjectID{}
+
+	// set an index variable that will be printed out when
+	// the functions mentioned above are called. the index will
+	// be the reference of which to do will be deleted/modified
+	index := 0
+
+	// prepare the cursor, first setting the options then the filter
+	opts := options.Find()
+	opts.SetSort(bson.D{{"isDone", 1}})
+
+	ftr := setFilter(userToLogin, allTodos)
+
+	sortedCursor, err := col.Find(ctx, ftr, opts)
+	if err != nil {
+		return []bson.ObjectID{}, err
+	}
+
+	// loop the cursor, create a Todo type of variable
+	// append its ID to the ids slice, print accordingly
+	// with the conditions (with index or not and showing
+	// or not completed tasks)
+	for sortedCursor.Next(ctx) {
+		td := Todo{}
+		err := sortedCursor.Decode(&td)
+		if err != nil {
+			return ids, err
+		}
+		ids = append(ids, td.ID)
+		if ind {
+			if allTodos {
+				fmt.Printf("%v - %v (%v)\n", index+1, td.Td, td.IsDone)
+			} else {
+				fmt.Printf("%v - %v\n", index+1, td.Td)
+			}
+		} else {
+			if allTodos {
+				fmt.Printf("%v (%v)\n", td.Td, td.IsDone)
+			} else {
+				fmt.Printf("%v\n", td.Td)
+			}
+		}
+		index += 1
+	}
+
+	return ids, nil
 }
 
 func AddTodoToDB(col *mongo.Collection, td Todo) error {
