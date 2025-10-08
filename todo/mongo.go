@@ -37,6 +37,13 @@ func CheckHasTodos(col *mongo.Collection, userToLogin user.User, allTodos bool) 
 	return true, nil
 }
 
+func setStatusText(td Todo) string {
+	if td.IsDone {
+		return "done"
+	}
+	return "undone"
+}
+
 func PrintTodos(col *mongo.Collection, userToLogin user.User, allTodos bool, ind bool) ([]bson.ObjectID, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
