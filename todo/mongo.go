@@ -79,6 +79,9 @@ func PrintTodos(col *mongo.Collection, userToLogin user.User, allTodos bool, ind
 			return ids, err
 		}
 		ids = append(ids, td.ID)
+
+		// set the text to represent the status instead of showing the boolean
+		// value
 		statusText := setStatusText(td)
 
 		if ind {
