@@ -79,6 +79,8 @@ func PrintTodos(col *mongo.Collection, userToLogin user.User, allTodos bool, ind
 			return ids, err
 		}
 		ids = append(ids, td.ID)
+		statusText := setStatusText(td)
+
 		if ind {
 			if allTodos {
 				fmt.Printf("%v - %v (%v)\n", index+1, td.Td, td.IsDone)
