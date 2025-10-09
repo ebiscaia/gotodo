@@ -12,6 +12,18 @@ import (
 	"go.mongodb.org/mongo-driver/v2/mongo/options"
 )
 
+func removeTodoAtIndex(usrLogin user.User, lTodos *[]Todo, todosUsr []Todo, index int) {
+	for pos := range *lTodos {
+		if (*lTodos)[pos].User != usrLogin.Name {
+			continue
+		}
+		if (*lTodos)[pos].Name == todosUsr[index].Name {
+			*lTodos = slices.Delete(*lTodos, pos, pos+1)
+			break
+		}
+	}
+}
+
 
 func setFilter(usr user.User, printAll bool) bson.M {
 	filter := bson.M{"user": usr.ID}

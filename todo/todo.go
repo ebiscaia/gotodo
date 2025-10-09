@@ -94,15 +94,6 @@ func inputIndex(lenTodo int, funcParent string) int {
 	}
 }
 
-func removeTodoAtIndex(usrLogin user.User, lTodos *[]Todo, todosUsr []Todo, index int) {
-	for pos := range *lTodos {
-		if (*lTodos)[pos].User != usrLogin.Name {
-			continue
-		}
-		if (*lTodos)[pos].Name == todosUsr[index].Name {
-			*lTodos = slices.Delete(*lTodos, pos, pos+1)
-			break
-		}
 func DeleteTodo(col *mongo.Collection, usrLogin user.User) {
 	todosUsr := DisplayTodos(col, usrLogin, true, true)
 	for _, todo := range todosUsr {
