@@ -12,6 +12,18 @@ import (
 	"go.mongodb.org/mongo-driver/v2/mongo/options"
 )
 
+func RemoveTodoAtIndex(col *mongo.Collection, usrTodos []bson.ObjectID, index int) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	_, err := col.DeleteOne(ctx, bson.M{"_id": usrTodos[index]})
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
 
 func setFilter(usr user.User, printAll bool) bson.M {
 	filter := bson.M{"user": usr.ID}

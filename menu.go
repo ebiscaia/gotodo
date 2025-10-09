@@ -172,7 +172,6 @@ func HandleTodoMenu(userToLogin user.User, menuOption Menu, listTodos *[]todo.To
 	case "listAll":
 		todo.DisplayTodos(col, userToLogin, true, false)
 		return "continue", nil
-
 	case "previous":
 		return "previous", nil
 
