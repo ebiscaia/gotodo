@@ -103,19 +103,15 @@ func removeTodoAtIndex(usrLogin user.User, lTodos *[]Todo, todosUsr []Todo, inde
 			*lTodos = slices.Delete(*lTodos, pos, pos+1)
 			break
 		}
+func DeleteTodo(col *mongo.Collection, usrLogin user.User) {
+	todosUsr := DisplayTodos(col, usrLogin, true, true)
+	for _, todo := range todosUsr {
+		fmt.Printf("%v\n", todo)
 	}
-}
-
-func DeleteTodo(usrLogin user.User, lTodos *[]Todo) {
-	DisplayTodos(usrLogin, lTodos, false, true)
-	todosUsr := userTodos(lTodos, usrLogin, false)
 	if len(todosUsr) == 0 {
 		return
 	}
 	index := inputIndex(len(todosUsr), "delete")
-	removeTodoAtIndex(usrLogin, lTodos, todosUsr, index)
-}
-
 func changeTodoAtIndex(usrLogin user.User, lTodos *[]Todo, todosUsr []Todo, index int) {
 	scn := bufio.NewScanner(os.Stdin)
 	for pos := range *lTodos {
