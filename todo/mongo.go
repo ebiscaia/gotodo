@@ -25,6 +25,20 @@ func RemoveTodoAtIndex(col *mongo.Collection, usrTodos []bson.ObjectID, index in
 	return nil
 }
 
+func GetTodo(col *mongo.Collection, usrTodos []bson.ObjectID, index int) (Todo, error) {
+	// retrieve todo based on its id
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	td := Todo{}
+	err := col.FindOne(ctx, bson.M{"_id": usrTodos[index]}).Decode(&td)
+	if err != nil {
+		return td, err
+	}
+
+	return td, nil
+}
+
 func setFilter(usr user.User, printAll bool) bson.M {
 	filter := bson.M{"user": usr.ID}
 	if !printAll {
