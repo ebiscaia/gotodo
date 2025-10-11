@@ -110,6 +110,32 @@ func changeTodoAtIndex(usrLogin user.User, lTodos *[]Todo, todosUsr []Todo, inde
 	}
 }
 
+func ChangeTodo(col *mongo.Collection, usrLogin user.User) {
+	todosUsr := DisplayTodos(col, usrLogin, true, true)
+	if len(todosUsr) == 0 {
+		return
+	}
+	index := inputIndex(len(todosUsr), "change")
+
+	// bring the todo at index
+	todo, err := GetTodo(col, todosUsr, index)
+	if err != nil {
+		fmt.Printf("Error: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("Task chosen: %v\n", todo.Td)
+	newTodo := promptChangeTodo()
+
+	// update the task with its new name
+	err = ChangeTodoDB(col, todosUsr, index, newTodo)
+	if err != nil {
+		fmt.Printf("Error: %v\n", err)
+		os.Exit(1)
+	}
+
+}
+
 func promptChangeStatus() bool {
 	scn := bufio.NewScanner(os.Stdin)
 	for pos := range *lTodos {
@@ -141,17 +167,11 @@ func promptChangeStatus() bool {
 	}
 }
 
-func ChangeTodo(usrLogin user.User, lTodos *[]Todo) {
-	DisplayTodos(usrLogin, lTodos, false, true)
-	todosUsr := userTodos(lTodos, usrLogin, false)
 func ChangeStatusTodo(col *mongo.Collection, usrLogin user.User) {
 	todosUsr := DisplayTodos(col, usrLogin, true, true)
 	if len(todosUsr) == 0 {
 		return
 	}
-	index := inputIndex(len(todosUsr), "change")
-	changeTodoAtIndex(usrLogin, lTodos, todosUsr, index)
-}
 	index := inputIndex(len(todosUsr), "done")
 
 func changeStatusAtIndex(usrLogin user.User, lTodos *[]Todo, todosUsr []Todo, index int) {
