@@ -25,6 +25,21 @@ func RemoveTodoAtIndex(col *mongo.Collection, usrTodos []bson.ObjectID, index in
 	return nil
 }
 
+func ChangeTodoDB(col *mongo.Collection, usrTodos []bson.ObjectID, index int, td string) error {
+	// retrieve todo based on its id
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	// _, err := col.DeleteOne(ctx, bson.M{"_id": usrTodos[index]})
+	_, err := col.UpdateOne(ctx, bson.M{"_id": usrTodos[index]}, bson.D{{"$set", bson.D{{"td", td}}}})
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func ChangeStatus(col *mongo.Collection, usrTodos []bson.ObjectID, index int, status bool) error {
 	// retrieve todo based on its id
 	println(status)
