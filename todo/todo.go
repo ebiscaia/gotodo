@@ -197,6 +197,4 @@ func ChangeStatusTodo(col *mongo.Collection, usrLogin user.User) {
 			os.Exit(1)
 		}
 	}
-	index := inputIndex(len(todosUsr), "done")
-	changeStatusAtIndex(usrLogin, lTodos, todosUsr, index)
 }
