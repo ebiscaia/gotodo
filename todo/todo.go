@@ -110,6 +110,16 @@ func changeTodoAtIndex(usrLogin user.User, lTodos *[]Todo, todosUsr []Todo, inde
 	}
 }
 
+func promptChangeTodo() string {
+	td := ""
+	scn := bufio.NewScanner(os.Stdin)
+	fmt.Println("Modify todo: ")
+	if scn.Scan() {
+		td = scn.Text()
+	}
+	return td
+}
+
 func ChangeTodo(col *mongo.Collection, usrLogin user.User) {
 	todosUsr := DisplayTodos(col, usrLogin, true, true)
 	if len(todosUsr) == 0 {
