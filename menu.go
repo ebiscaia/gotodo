@@ -157,7 +157,7 @@ func HandleMainMenu(menuOption Menu, userToLogin *user.User, col *mongo.Collecti
 func HandleTodoMenu(userToLogin user.User, menuOption Menu, listTodos *[]todo.Todo, col *mongo.Collection) (string, error) {
 	switch menuOption.instruction {
 	case "create":
-		todo.CreateTodo(userToLogin, col)
+		todo.CreateTodo(col, userToLogin)
 		return "continue", nil
 	case "delete":
 		todo.DeleteTodo(col, userToLogin)
