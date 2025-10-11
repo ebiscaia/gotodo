@@ -103,7 +103,6 @@ func DeleteTodo(col *mongo.Collection, usrLogin user.User) {
 		return
 	}
 	index := inputIndex(len(todosUsr), "delete")
-func changeTodoAtIndex(usrLogin user.User, lTodos *[]Todo, todosUsr []Todo, index int) {
 	err := RemoveTodoAtIndex(col, todosUsr, index)
 	if err != nil {
 		fmt.Printf("Error: %v\n", err)
