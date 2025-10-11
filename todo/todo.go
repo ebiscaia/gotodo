@@ -174,40 +174,6 @@ func ChangeStatusTodo(col *mongo.Collection, usrLogin user.User) {
 	}
 	index := inputIndex(len(todosUsr), "done")
 
-func changeStatusAtIndex(usrLogin user.User, lTodos *[]Todo, todosUsr []Todo, index int) {
-	scn := bufio.NewScanner(os.Stdin)
-	statusStr := "not done"
-	for pos := range *lTodos {
-		if (*lTodos)[pos].User != usrLogin.Name {
-			continue
-		}
-		if (*lTodos)[pos].Name == todosUsr[index].Name {
-			fmt.Print("The current status of the task is: ")
-			if (*lTodos)[pos].IsDone {
-				statusStr = "done"
-			}
-			fmt.Printf("%v\n", statusStr)
-
-			for {
-				fmt.Println("Would you like to change it (y/n): ")
-				if scn.Scan() {
-					option := scn.Text()
-					if option != "y" && option != "n" {
-						fmt.Println("Please choose a proper option")
-						continue
-					}
-					if option == "y" {
-						(*lTodos)[pos].IsDone = !(*lTodos)[pos].IsDone
-						break
-					}
-					if option == "n" {
-						break
-					}
-					fmt.Println("There was an error with todo creation. Leaving...")
-					os.Exit(1)
-				}
-			}
-		}
 	// bring the todo at index
 	todo, err := GetTodo(col, todosUsr, index)
 	if err != nil {
