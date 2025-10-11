@@ -2,11 +2,8 @@ package todo
 
 import (
 	"bufio"
-	//"context"
 	"fmt"
 	"os"
-	//"time"
-	// "slices"
 	"strconv"
 
 	"gotodo/user"

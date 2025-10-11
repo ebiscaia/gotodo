@@ -6,9 +6,10 @@ import (
 	"os"
 	"slices"
 
-	"go.mongodb.org/mongo-driver/v2/mongo"
 	"gotodo/todo"
 	"gotodo/user"
+
+	"go.mongodb.org/mongo-driver/v2/mongo"
 )
 
 type Menu struct {
