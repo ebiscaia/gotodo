@@ -148,15 +148,6 @@ func ChangeTodo(col *mongo.Collection, usrLogin user.User) {
 
 func promptChangeStatus() bool {
 	scn := bufio.NewScanner(os.Stdin)
-	for pos := range *lTodos {
-		if (*lTodos)[pos].User != usrLogin.Name {
-			continue
-		}
-		if (*lTodos)[pos].Name == todosUsr[index].Name {
-			fmt.Println("Enter new todo:")
-			if scn.Scan() {
-				(*lTodos)[pos].Name = scn.Text()
-				break
 	for {
 		fmt.Println("Would you like to change it (y/n): ")
 		if scn.Scan() {
