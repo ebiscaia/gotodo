@@ -180,13 +180,7 @@ func ChangeStatusTodo(col *mongo.Collection, usrLogin user.User) {
 		fmt.Printf("Error: %v\n", err)
 		os.Exit(1)
 	}
-}
 
-func ChangeStatusTodo(usrLogin user.User, lTodos *[]Todo) {
-	DisplayTodos(usrLogin, lTodos, true, true)
-	todosUsr := userTodos(lTodos, usrLogin, true)
-	if len(todosUsr) == 0 {
-		return
 	statusText := "undone"
 	if todo.IsDone {
 		statusText = "done"
