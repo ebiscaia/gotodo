@@ -43,7 +43,7 @@ func DisplayTodos(col *mongo.Collection, userToLogin user.User, allTodos bool, i
 	return ids
 }
 
-func CreateTodo(usrLogin user.User, col *mongo.Collection) {
+func CreateTodo(col *mongo.Collection, usrLogin user.User) {
 	scn := bufio.NewScanner(os.Stdin)
 	fmt.Println("Please enter new todo:")
 
