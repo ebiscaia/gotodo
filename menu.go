@@ -159,7 +159,7 @@ func HandleTodoMenu(userToLogin user.User, menuOption Menu, listTodos *[]todo.To
 		todo.CreateTodo(userToLogin, col)
 		return "continue", nil
 	case "delete":
-		todo.DeleteTodo(userToLogin, listTodos)
+		todo.DeleteTodo(col, userToLogin)
 		return "continue", nil
 	case "change":
 		todo.ChangeTodo(col, userToLogin)
