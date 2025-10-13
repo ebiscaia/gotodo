@@ -161,6 +161,18 @@ func PrintTodos(col *mongo.Collection, userToLogin user.User, allTodos bool, ind
 	return ids, nil
 }
 
+func FindTodoDBCI(col *mongo.Collection, usr user.User, td string) bool {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	todoToFind := Todo{}
+	err := col.FindOne(ctx,
+		bson.M{"user": usr.ID,
+			"isDone": false,
+			"td":     bson.M{"$regex": td, "$options": "i"}}).Decode(&todoToFind)
+	return err == nil
+}
+
 func AddTodoToDB(col *mongo.Collection, td Todo) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
