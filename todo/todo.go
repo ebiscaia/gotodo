@@ -48,6 +48,12 @@ func CreateTodo(col *mongo.Collection, usrLogin user.User) {
 	fmt.Println("Please enter new todo:")
 
 	if scn.Scan() {
+		// check for duplicates (case insensitive)
+		if FindTodoDBCI(col, usrLogin, scn.Text()) {
+			fmt.Println("There is already a pending todo with the same name")
+			return
+		}
+
 		// add todo to the database
 		err := AddTodoToDB(col, Todo{Td: scn.Text(), User: usrLogin.ID})
 		if err != nil {
