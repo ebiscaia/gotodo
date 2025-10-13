@@ -60,9 +60,9 @@ func CreateTodo(col *mongo.Collection, usrLogin user.User) {
 			fmt.Printf("%v\n", err)
 		}
 	} else {
-		fmt.Println("There was an error with todo creation. Leaving...")
-		os.Exit(1)
 	}
+	fmt.Println("There was an error with todo creation. Leaving...")
+	os.Exit(1)
 }
 
 func inputIndex(lenTodo int, funcParent string) int {
