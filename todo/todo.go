@@ -47,8 +47,8 @@ func CreateTodo(col *mongo.Collection, usrLogin user.User) {
 	scn := bufio.NewScanner(os.Stdin)
 	fmt.Println("Please enter new todo:")
 
-	//use db to save
 	if scn.Scan() {
+		// add todo to the database
 		err := AddTodoToDB(col, Todo{Td: scn.Text(), User: usrLogin.ID})
 		if err != nil {
 			fmt.Printf("%v\n", err)
