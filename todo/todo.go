@@ -89,7 +89,7 @@ func inputIndex(lenTodo int, funcParent string) int {
 			fmt.Println("Leaving...")
 			os.Exit(1)
 		}
-		if index <= 0 || index > lenTodo {
+		if index < 0 || index > lenTodo {
 			fmt.Println("Index is out of range. Please try again.")
 			continue
 		}
@@ -100,10 +100,19 @@ func inputIndex(lenTodo int, funcParent string) int {
 
 func DeleteTodo(col *mongo.Collection, usrLogin user.User) {
 	todosUsr := DisplayTodos(col, usrLogin, true, true)
+
+	// Display zero as option to return to previous menu
+	fmt.Println("0 - Return to previous menu")
+
 	if len(todosUsr) == 0 {
 		return
 	}
 	index := inputIndex(len(todosUsr), "delete")
+
+	// return to previous menu
+	if index == -1 {
+		return
+	}
 
 	todo, err := GetTodo(col, todosUsr, index)
 	if err != nil {
@@ -131,12 +140,21 @@ func promptChangeTodo() string {
 
 func ChangeTodo(col *mongo.Collection, usrLogin user.User) {
 	todosUsr := DisplayTodos(col, usrLogin, true, true)
+
+	// Display zero as option to return to previous menu
+	fmt.Println("0 - Return to previous menu")
+
 	if len(todosUsr) == 0 {
 		return
 	}
 	index := inputIndex(len(todosUsr), "change")
 
 	// bring the todo at index
+	// return to previous menu
+	if index == -1 {
+		return
+	}
+
 	todo, err := GetTodo(col, todosUsr, index)
 	if err != nil {
 		fmt.Printf("Error: %v\n", err)
@@ -179,12 +197,21 @@ func promptChangeStatus() bool {
 
 func ChangeStatusTodo(col *mongo.Collection, usrLogin user.User) {
 	todosUsr := DisplayTodos(col, usrLogin, true, true)
+
+	// Display zero as option to return to previous menu
+	fmt.Println("0 - Return to previous menu")
+
 	if len(todosUsr) == 0 {
 		return
 	}
 	index := inputIndex(len(todosUsr), "done")
 
 	// bring the todo at index
+	// return to previous menu
+	if index == -1 {
+		return
+	}
+
 	todo, err := GetTodo(col, todosUsr, index)
 	if err != nil {
 		fmt.Printf("Error: %v\n", err)
