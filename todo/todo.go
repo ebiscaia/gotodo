@@ -100,9 +100,6 @@ func inputIndex(lenTodo int, funcParent string) int {
 
 func DeleteTodo(col *mongo.Collection, usrLogin user.User) {
 	todosUsr := DisplayTodos(col, usrLogin, true, true)
-	for _, todo := range todosUsr {
-		fmt.Printf("%v\n", todo)
-	}
 	if len(todosUsr) == 0 {
 		return
 	}
