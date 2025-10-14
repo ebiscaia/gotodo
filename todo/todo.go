@@ -89,7 +89,7 @@ func inputIndex(lenTodo int, funcParent string) int {
 			fmt.Println("Leaving...")
 			os.Exit(1)
 		}
-		if index <= 0 || index > lenTodo {
+		if index < 0 || index > lenTodo {
 			fmt.Println("Index is out of range. Please try again.")
 			continue
 		}
