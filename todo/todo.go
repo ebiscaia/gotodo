@@ -109,6 +109,11 @@ func DeleteTodo(col *mongo.Collection, usrLogin user.User) {
 	}
 	index := inputIndex(len(todosUsr), "delete")
 
+	// return to previous menu
+	if index == -1 {
+		return
+	}
+
 	todo, err := GetTodo(col, todosUsr, index)
 	if err != nil {
 		fmt.Printf("Error: %v\n", err)
@@ -145,6 +150,11 @@ func ChangeTodo(col *mongo.Collection, usrLogin user.User) {
 	index := inputIndex(len(todosUsr), "change")
 
 	// bring the todo at index
+	// return to previous menu
+	if index == -1 {
+		return
+	}
+
 	todo, err := GetTodo(col, todosUsr, index)
 	if err != nil {
 		fmt.Printf("Error: %v\n", err)
@@ -197,6 +207,11 @@ func ChangeStatusTodo(col *mongo.Collection, usrLogin user.User) {
 	index := inputIndex(len(todosUsr), "done")
 
 	// bring the todo at index
+	// return to previous menu
+	if index == -1 {
+		return
+	}
+
 	todo, err := GetTodo(col, todosUsr, index)
 	if err != nil {
 		fmt.Printf("Error: %v\n", err)
