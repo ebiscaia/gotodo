@@ -104,7 +104,16 @@ func DeleteTodo(col *mongo.Collection, usrLogin user.User) {
 		return
 	}
 	index := inputIndex(len(todosUsr), "delete")
-	err := RemoveTodoAtIndex(col, todosUsr, index)
+
+	todo, err := GetTodo(col, todosUsr, index)
+	if err != nil {
+		fmt.Printf("Error: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("Task deleted: %v\n", todo.Td)
+
+	err = RemoveTodoAtIndex(col, todosUsr, index)
 	if err != nil {
 		fmt.Printf("Error: %v\n", err)
 	}
