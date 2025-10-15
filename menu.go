@@ -103,7 +103,6 @@ func TodoMenu() Menu {
 	menuTodo = append(menuTodo, Menu{instruction: "change", message: "Change todo"})
 	menuTodo = append(menuTodo, Menu{instruction: "done", message: "Mark as done/undone"})
 	menuTodo = append(menuTodo, Menu{instruction: "list", message: "List pending todos"})
-	menuTodo = append(menuTodo, Menu{instruction: "listAll", message: "List all todos"})
 	menuTodo = append(menuTodo, Menu{instruction: "previous", message: "Previous menu"})
 	menuTodo = append(menuTodo, Menu{instruction: "exit", message: "Exit program"})
 	menuChosen := inputMenu(menuTodo)
@@ -171,7 +170,6 @@ func HandleTodoMenu(userToLogin user.User, menuOption Menu, listTodos *[]todo.To
 	case "list":
 		todo.DisplayTodos(col, userToLogin, false, false)
 		return "continue", nil
-	case "listAll":
 		todo.DisplayTodos(col, userToLogin, true, false)
 		return "continue", nil
 	case "previous":
