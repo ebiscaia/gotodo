@@ -102,7 +102,7 @@ func TodoMenu() Menu {
 	menuTodo = append(menuTodo, Menu{instruction: "delete", message: "Delete todo"})
 	menuTodo = append(menuTodo, Menu{instruction: "change", message: "Change todo"})
 	menuTodo = append(menuTodo, Menu{instruction: "done", message: "Mark as done/undone"})
-	menuTodo = append(menuTodo, Menu{instruction: "list", message: "List pending todos"})
+	menuTodo = append(menuTodo, Menu{instruction: "list", message: "List todos"})
 	menuTodo = append(menuTodo, Menu{instruction: "previous", message: "Previous menu"})
 	menuTodo = append(menuTodo, Menu{instruction: "exit", message: "Exit program"})
 	menuChosen := inputMenu(menuTodo)
