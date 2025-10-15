@@ -27,11 +27,7 @@ func DisplayTodos(col *mongo.Collection, userToLogin user.User, allTodos bool, i
 	}
 
 	if !hasTodos {
-		if allTodos {
-			fmt.Printf("User %v does not have any todos\n", userToLogin.Name)
-			return []bson.ObjectID{}
-		}
-		fmt.Printf("User %v does not have any pending todos\n", userToLogin.Name)
+		fmt.Printf("User %v does not have any todos\n", userToLogin.Name)
 		return []bson.ObjectID{}
 	}
 
