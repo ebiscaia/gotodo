@@ -143,17 +143,9 @@ func PrintTodos(col *mongo.Collection, userToLogin user.User, allTodos bool, ind
 		statusText := setStatusText(td)
 
 		if ind {
-			if allTodos {
-				fmt.Printf("%v - %v (%v)\n", index+1, td.Td, statusText)
-			} else {
-				fmt.Printf("%v - %v\n", index+1, td.Td)
-			}
+			fmt.Printf("%v - %v (%v)\n", index+1, td.Td, statusText)
 		} else {
-			if allTodos {
-				fmt.Printf("%v (%v)\n", td.Td, statusText)
-			} else {
-				fmt.Printf("%v\n", td.Td)
-			}
+			fmt.Printf("%v (%v)\n", td.Td, statusText)
 		}
 		index += 1
 	}
