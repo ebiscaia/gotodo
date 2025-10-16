@@ -19,7 +19,7 @@ type Todo struct {
 	IsDone bool          `bson:"isDone"`
 }
 
-func DisplayTodos(col *mongo.Collection, userToLogin user.User, allTodos bool, index bool) []bson.ObjectID {
+func DisplayTodos(col *mongo.Collection, userToLogin user.User) []bson.ObjectID {
 
 	hasTodos, err := CheckHasTodos(col, userToLogin, allTodos)
 	if err != nil {
