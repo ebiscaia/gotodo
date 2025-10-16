@@ -21,7 +21,7 @@ type Todo struct {
 
 func DisplayTodos(col *mongo.Collection, userToLogin user.User) []bson.ObjectID {
 
-	hasTodos, err := CheckHasTodos(col, userToLogin, allTodos)
+	hasTodos, err := CheckHasTodos(col, userToLogin)
 	if err != nil {
 		fmt.Printf("%v\n", err)
 	}
