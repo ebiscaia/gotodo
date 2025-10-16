@@ -100,9 +100,6 @@ func DeleteTodo(col *mongo.Collection, usrLogin user.User) {
 	// Display zero as option to return to previous menu
 	fmt.Println("0 - Return to previous menu")
 
-	if len(todosUsr) == 0 {
-		return
-	}
 	index := inputIndex(len(todosUsr), "delete")
 
 	// return to previous menu
@@ -141,9 +138,6 @@ func ChangeTodo(col *mongo.Collection, usrLogin user.User) {
 	// Display zero as option to return to previous menu
 	fmt.Println("0 - Return to previous menu")
 
-	if len(todosUsr) == 0 {
-		return
-	}
 	index := inputIndex(len(todosUsr), "change")
 
 	// return to previous menu
@@ -198,9 +192,6 @@ func ChangeStatusTodo(col *mongo.Collection, usrLogin user.User) {
 	// Display zero as option to return to previous menu
 	fmt.Println("0 - Return to previous menu")
 
-	if len(todosUsr) == 0 {
-		return
-	}
 	index := inputIndex(len(todosUsr), "done")
 
 	// return to previous menu
