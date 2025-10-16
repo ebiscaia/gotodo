@@ -95,7 +95,7 @@ func StartMenu(curUser user.User, col *mongo.Collection) Menu {
 	return menuChosen
 }
 
-func TodoMenu() Menu {
+func TodoMenu(col *mongo.Collection, curUser user.User) Menu {
 	//create a menu with todo operations
 	menuTodo := []Menu{}
 	menuTodo = append(menuTodo, Menu{instruction: "create", message: "Create todo"})
