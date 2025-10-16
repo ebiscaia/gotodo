@@ -105,6 +105,18 @@ func TodoMenu(col *mongo.Collection, curUser user.User) Menu {
 	menuTodo = append(menuTodo, Menu{instruction: "list", message: "List todos"})
 	menuTodo = append(menuTodo, Menu{instruction: "previous", message: "Previous menu"})
 	menuTodo = append(menuTodo, Menu{instruction: "exit", message: "Exit program"})
+
+	// check whether the user has todos in the database and update menu options accordingly
+	hasTodos, err := todo.CheckHasTodos(col, curUser)
+	if err != nil {
+		fmt.Printf("%v\n", err)
+		os.Exit(1)
+	}
+
+	if !hasTodos {
+		menuTodo = slices.Delete(menuTodo, 1, 5)
+	}
+
 	menuChosen := inputMenu(menuTodo)
 	return menuChosen
 }
