@@ -87,7 +87,7 @@ func main() {
 
 		// present menu with todo options after a user is logged in
 		for {
-			menuTodoOption := TodoMenu()
+			menuTodoOption := TodoMenu(todoCollection, userToLogin)
 			result, err := HandleTodoMenu(userToLogin, menuTodoOption, &todos, todoCollection)
 			if err != nil {
 				fmt.Printf("%v\n", err)
