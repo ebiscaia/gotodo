@@ -79,7 +79,7 @@ func setFilter(usr user.User, printAll bool) bson.M {
 	return filter
 }
 
-func CheckHasTodos(col *mongo.Collection, userToLogin user.User, allTodos bool) (bool, error) {
+func CheckHasTodos(col *mongo.Collection, userToLogin user.User) (bool, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
