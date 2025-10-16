@@ -32,7 +32,7 @@ func DisplayTodos(col *mongo.Collection, userToLogin user.User) []bson.ObjectID 
 	}
 
 	//print and return ids as a slice
-	ids, err := PrintTodos(col, userToLogin, allTodos, index)
+	ids, err := PrintTodos(col, userToLogin)
 	if err != nil {
 		fmt.Printf("%v\n", err)
 	}
