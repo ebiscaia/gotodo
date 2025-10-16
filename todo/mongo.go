@@ -75,7 +75,7 @@ func CheckHasTodos(col *mongo.Collection, userToLogin user.User) (bool, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	ftr := setFilter(userToLogin, allTodos)
+	ftr := bson.M{"user": userToLogin.ID}
 
 	usrHasTodos, err := col.CountDocuments(ctx, ftr)
 	if err != nil {
@@ -111,7 +111,7 @@ func PrintTodos(col *mongo.Collection, userToLogin user.User) ([]bson.ObjectID, 
 	opts := options.Find()
 	opts.SetSort(bson.D{{"isDone", 1}})
 
-	ftr := setFilter(userToLogin, allTodos)
+	ftr := bson.M{"user": userToLogin.ID}
 
 	sortedCursor, err := col.Find(ctx, ftr, opts)
 	if err != nil {
