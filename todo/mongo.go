@@ -102,7 +102,7 @@ func setStatusText(td Todo) string {
 	return "undone"
 }
 
-func PrintTodos(col *mongo.Collection, userToLogin user.User, allTodos bool, ind bool) ([]bson.ObjectID, error) {
+func PrintTodos(col *mongo.Collection, userToLogin user.User) ([]bson.ObjectID, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
