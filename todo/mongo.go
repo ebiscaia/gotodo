@@ -71,14 +71,6 @@ func GetTodo(col *mongo.Collection, usrTodos []bson.ObjectID, index int) (Todo, 
 	return td, nil
 }
 
-func setFilter(usr user.User, printAll bool) bson.M {
-	filter := bson.M{"user": usr.ID}
-	if !printAll {
-		filter = bson.M{"user": usr.ID, "isDone": false}
-	}
-	return filter
-}
-
 func CheckHasTodos(col *mongo.Collection, userToLogin user.User) (bool, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
