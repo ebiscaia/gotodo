@@ -95,7 +95,7 @@ func inputIndex(lenTodo int, funcParent string) int {
 }
 
 func DeleteTodo(col *mongo.Collection, usrLogin user.User) {
-	todosUsr := DisplayTodos(col, usrLogin, true, true)
+	todosUsr := DisplayTodos(col, usrLogin)
 
 	// Display zero as option to return to previous menu
 	fmt.Println("0 - Return to previous menu")
@@ -136,7 +136,7 @@ func promptChangeTodo() string {
 }
 
 func ChangeTodo(col *mongo.Collection, usrLogin user.User) {
-	todosUsr := DisplayTodos(col, usrLogin, true, true)
+	todosUsr := DisplayTodos(col, usrLogin)
 
 	// Display zero as option to return to previous menu
 	fmt.Println("0 - Return to previous menu")
@@ -193,7 +193,7 @@ func promptChangeStatus() bool {
 }
 
 func ChangeStatusTodo(col *mongo.Collection, usrLogin user.User) {
-	todosUsr := DisplayTodos(col, usrLogin, true, true)
+	todosUsr := DisplayTodos(col, usrLogin)
 
 	// Display zero as option to return to previous menu
 	fmt.Println("0 - Return to previous menu")
